@@ -20,14 +20,23 @@ public class KoreographyTest : MonoBehaviour
     private void Awake()
     {
         Koreographer.Instance.RegisterForEvents(sphere, Sphere);
-        Koreographer.Instance.RegisterForEvents(cube, Cube);
+        
+        Koreographer.Instance.RegisterForEvents(cube, CubeEvent);
+        
+        Koreographer.Instance.RegisterForEventsWithTime(cube, CubeEventWithTime);
     }
 
-    void Cube(KoreographyEvent a)
+    void CubeEvent(KoreographyEvent a)
     {
         if (c != null) c.Complete();
         c = CubeOBJ.DOPunchScale(Vector3.one, 0.1f);
-    }    
+    }
+
+    void CubeEventWithTime(KoreographyEvent a, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
+    {
+        print($"Start Sample: {a.StartSample}, End Sample: {a.EndSample}");
+        print($"sampleTime: {sampleTime}, sampleDelta: {sampleDelta}, deltaSlice: {deltaSlice}");
+    }
     
     void Sphere(KoreographyEvent a)
     {
