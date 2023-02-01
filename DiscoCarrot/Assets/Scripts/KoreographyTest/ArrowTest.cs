@@ -18,8 +18,6 @@ public class ArrowTest : MonoBehaviour
         var totalTime = grapher.musicPlaybackController.GetTotalSampleTimeForClip(clipName);
         var temp = grapher.GetAllEventsInRange(clipName, arrow, 0,
             totalTime);
-        player.
-        
     }
 
     public void Update()
