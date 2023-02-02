@@ -12,6 +12,6 @@ public class Moving : MonoBehaviour
     private void FixedUpdate()
     {
         var temp = Dir * speed * Time.deltaTime;
-        rect.localPosition += new Vector3( temp.x, temp.y, 0);
+        rect.anchoredPosition = rect.anchoredPosition + new Vector2( temp.x, temp.y);
     }
 }
