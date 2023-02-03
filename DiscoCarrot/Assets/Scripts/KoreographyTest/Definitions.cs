@@ -42,3 +42,9 @@ public enum PlayerFarmAction
     HarvestPlant,
 }
 
+public interface IState
+{
+    void Enter();
+    void Exit();
+    void Reset();
+}

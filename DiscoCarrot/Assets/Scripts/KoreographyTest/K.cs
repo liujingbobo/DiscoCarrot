@@ -6,6 +6,7 @@ using SonicBloom.Koreo;
 using SonicBloom.Koreo.Players;
 using UnityEngine;
 
+// 
 public static class K
 {
     public static Koreographer koreographer;
@@ -19,7 +20,6 @@ public static class K
         var temp = (float) sampleTime / SampleRate;
         return temp;
     }
-
     public static KoreographyEvent GetClosestDownBeatEvent()
     {
         int min = CurrentSampleTime - SampleRate;
@@ -65,6 +65,45 @@ public static class K
 
         return validEvents[minDisIndex];
     }
-    
-    
+    public static List<KeyCode> GetAllValidKeyDown()
+    {
+        List<KeyCode> keys = new List<KeyCode>();
+        
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            keys.Add(KeyCode.UpArrow);
+        }       
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            keys.Add(KeyCode.RightArrow);
+        }      
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            keys.Add(KeyCode.DownArrow);
+        }       
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            keys.Add(KeyCode.LeftArrow);
+        }
+
+        return keys;
+    }
+    // pre requisite: Assume current input is valid
+    public static ArrowLevel GetCurrentArrowLevel(bool isDownBeat = true)
+    {
+        var kEvent = isDownBeat ? GetClosestDownBeatEvent() : GetClosestUpBeatEvent();
+        var gap = Math.Abs(kEvent.EndSample - CurrentSampleTime);
+        
+        if (gap > G.GetThreshold(ArrowLevel.Miss))
+        {
+            return ArrowLevel.Miss;
+        }
+        
+        if(gap > G.GetThreshold(ArrowLevel.Good))
+        {
+            return ArrowLevel.Good;
+        }
+        
+        return ArrowLevel.Perfect;
+    }
 }
