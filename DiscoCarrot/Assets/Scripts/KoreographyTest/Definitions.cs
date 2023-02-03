@@ -42,6 +42,21 @@ public enum PlayerFarmAction
     HarvestPlant,
 }
 
+public enum PlayerAnimName
+{
+    Idle,
+    Move,
+    Sad, //miss灰心
+    PlowUp,
+    PlowDown,
+    PlantSeed,
+    Watering,
+    Debugging,
+    ReadyFertilize, //预备施肥
+    Fertilize, //施肥
+    Harvest,
+}
+
 public interface IState
 {
     void Enter();
