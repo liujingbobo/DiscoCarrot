@@ -12,4 +12,6 @@ public class GameEvents : MonoBehaviour
 
     public static Action<FarmTile, PlayerFarmAction> OnReachedFarmTile;
     public static Action<FarmTile> OnLeaveFarmTile;
+
+    public static Action<FarmTile, PlayerFarmAction, ActionLevel> OnFarmActionDone;
 }
