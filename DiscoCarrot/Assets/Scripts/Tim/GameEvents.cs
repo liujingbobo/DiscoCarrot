@@ -9,5 +9,7 @@ public class GameEvents : MonoBehaviour
     public static Action OnOneTickPassed;
     public static Action OnDownBeat;
     public static Action OnUpBeat;
-    
+
+    public static Action<FarmTile, PlayerFarmAction> OnReachedFarmTile;
+    public static Action<FarmTile> OnLeaveFarmTile;
 }
