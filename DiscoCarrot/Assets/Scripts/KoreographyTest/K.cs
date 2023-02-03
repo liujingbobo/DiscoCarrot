@@ -42,7 +42,6 @@ public static class K
 
         return validEvents[minDisIndex];
     }   
-    
     public static KoreographyEvent GetClosestUpBeatEvent()
     {
         int min = CurrentSampleTime - SampleRate;
@@ -85,8 +84,12 @@ public static class K
         {
             keys.Add(KeyCode.LeftArrow);
         }
-
         return keys;
+    }
+    public static bool HasValidArrowKeyDown()
+    {
+        return Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) ||
+               Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow);
     }
     // pre requisite: Assume current input is valid
     public static ArrowLevel GetCurrentArrowLevel(bool isDownBeat = true)

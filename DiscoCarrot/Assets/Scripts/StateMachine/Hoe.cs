@@ -21,7 +21,8 @@ public class Hoe : MonoBehaviour, IState
 
     public void Reset()
     {
-        
+        downPressed = false;
+        MaxSampleTime = 0;
     }
 
     public void Update()
@@ -58,6 +59,4 @@ public class Hoe : MonoBehaviour, IState
             // Failed
         }
     }
-
-
 }
