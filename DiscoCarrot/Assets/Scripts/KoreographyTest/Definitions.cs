@@ -30,3 +30,15 @@ public enum ActionLevel
     Good,
     Miss
 }
+
+public enum PlayerFarmAction
+{
+    NoActionNeeded,
+    PlowLand,
+    PlantSeed,
+    WaterPlant,
+    FertilizePlant,
+    DebugPlant,
+    HarvestPlant,
+}
+
