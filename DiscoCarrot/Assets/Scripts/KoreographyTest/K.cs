@@ -15,6 +15,8 @@ public static class K
     public static int CurrentSampleTime => koreographer.GetMusicSampleTime();
     public static int TotalSampleTime => musicPlayer.GetTotalSampleTimeForClip(currentClip);
     public static int SampleRate => koreographer.GetMusicSampleRate();
+    public static float SamplePerBeat => G.Settings.SamplesPerBeatForSong[currentClip];
+    public static double BeatsPerMinute => koreographer.GetMusicBPM();
     public static float SampleTimeToTime(int sampleTime)
     {
         var temp = (float) sampleTime / SampleRate;
@@ -32,7 +34,7 @@ public static class K
         for(int i = 0; i < validEvents.Count; i++)
         {
             var eEvent = validEvents[i];
-            var d = Math.Abs(eEvent.EndSample - CurrentSampleTime);
+            var d = Math.Abs(eEvent.StartSample - CurrentSampleTime);
             if ( d <= dis)
             {
                 dis = d;
@@ -41,7 +43,8 @@ public static class K
         }
 
         return validEvents[minDisIndex];
-    }   
+    }
+
     public static KoreographyEvent GetClosestUpBeatEvent()
     {
         int min = CurrentSampleTime - SampleRate;
@@ -54,7 +57,7 @@ public static class K
         for(int i = 0; i < validEvents.Count; i++)
         {
             var eEvent = validEvents[i];
-            var d = Math.Abs(eEvent.EndSample - CurrentSampleTime);
+            var d = Math.Abs(eEvent.StartSample - CurrentSampleTime);
             if ( d <= dis)
             {
                 dis = d;
@@ -95,7 +98,24 @@ public static class K
     public static ArrowLevel GetCurrentArrowLevel(bool isDownBeat = true)
     {
         var kEvent = isDownBeat ? GetClosestDownBeatEvent() : GetClosestUpBeatEvent();
-        var gap = Math.Abs(kEvent.EndSample - CurrentSampleTime);
+        var gap = Math.Abs(kEvent.StartSample - CurrentSampleTime);
+        
+        if (gap > G.GetThreshold(ArrowLevel.Miss))
+        {
+            return ArrowLevel.Miss;
+        }
+        
+        if(gap > G.GetThreshold(ArrowLevel.Good))
+        {
+            return ArrowLevel.Good;
+        }
+        
+        return ArrowLevel.Perfect;
+    }
+
+    public static ArrowLevel GetArrowLevel(int targetSampleTime)
+    {
+        var gap = Math.Abs(targetSampleTime - CurrentSampleTime);
         
         if (gap > G.GetThreshold(ArrowLevel.Miss))
         {

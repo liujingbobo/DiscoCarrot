@@ -63,3 +63,13 @@ public interface IState
     void Exit();
     void Reset();
 }
+
+public interface IUIThumbnail<T>
+{
+    void FillWith(T target, params object[] extraInfos);
+}
+
+public enum ArrowState
+{
+    
+}

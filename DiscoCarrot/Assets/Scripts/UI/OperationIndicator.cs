@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OperationIndicator : MonoBehaviour
 {
-    public Dictionary<PlayerFarmAction, IState> dic;
+    [SerializeField] private Dictionary<PlayerFarmAction, IState> dic;
     private PlayerFarmAction curAction = PlayerFarmAction.NoActionNeeded;
     public void SwitchTo(PlayerFarmAction action)
     {

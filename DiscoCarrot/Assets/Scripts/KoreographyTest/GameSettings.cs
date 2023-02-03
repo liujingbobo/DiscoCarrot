@@ -14,4 +14,6 @@ public class GameSettings : SerializedMonoBehaviour
 
     [EventID]public string DownBeatEvent;
     [EventID]public string UpBeatEvent;
+
+    public Dictionary<string, float> SamplesPerBeatForSong;
 }

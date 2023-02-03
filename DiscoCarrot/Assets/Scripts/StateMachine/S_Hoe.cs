@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Hoe : MonoBehaviour, IState
+public class S_Hoe : MonoBehaviour, IState
 {
     private bool downPressed = false;
     private int MaxSampleTime;
     
     public void Enter()
     {
-        
+        G.Indicator.SwitchTo(PlayerFarmAction.PlowLand);
     }
 
     public void Exit()
@@ -39,7 +39,7 @@ public class Hoe : MonoBehaviour, IState
             }
             else
             {
-                
+                // GameEvents.OnFarmActionDone.Invoke();
             }
         }
 
@@ -47,9 +47,15 @@ public class Hoe : MonoBehaviour, IState
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (allValidKeyDown.Count > 1)
+                var level = K.GetCurrentArrowLevel();
+
+                if (allValidKeyDown.Count > 1 || level == ArrowLevel.Miss)
                 {
                     // Failed
+                }
+                else
+                {
+                    
                 }
             }
         }
