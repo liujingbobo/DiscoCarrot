@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
         
         //cached runtime values
         public List<int> harvestedCarrots = new List<int>(4);
-        public int totalHarvestScore = 0;
+        public int missedCount = 0;
     }
     
     public enum GameLoopState
@@ -219,15 +219,6 @@ public class GameManager : MonoBehaviour
             stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(true);
             stateMachine.sharedContext.againButton.onClick.AddListener(OnAgainButtonClick);
             stateMachine.sharedContext.homeButton.onClick.AddListener(OnHomeButtonClick);
-            
-            //calculate Harvested Carrot Score
-            var totalScore = 0;
-            for (int level = 0; level < stateMachine.sharedContext.harvestedCarrots.Count; level++)
-            {
-                var carrotLevel = (CarrotLevel) level;
-                var carrotCount = stateMachine.sharedContext.harvestedCarrots[level];
-                stateMachine.sharedContext.totalHarvestScore += (carrotCount * Config.GetScoreByCarrotLevel(carrotLevel));
-            }
         }
         public override void ExitState()
         {
