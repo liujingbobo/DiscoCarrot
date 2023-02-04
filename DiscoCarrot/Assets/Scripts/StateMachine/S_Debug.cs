@@ -6,15 +6,13 @@ using Random = UnityEngine.Random;
 
 public class S_Debug : MonoBehaviour, IState
 {
-    private int progress;
+    private int phase;
     private int expectedSampleTime;
     private bool clockwise;
     
     public void Enter()
     {
-        progress = 0;
-        expectedSampleTime = 0;
-        clockwise = Random.Range(0, 2) == 1;
+        Reset();
     }
 
     public void Exit()
@@ -23,23 +21,50 @@ public class S_Debug : MonoBehaviour, IState
 
     public void Reset()
     {
+        phase = 0;
+        expectedSampleTime = 0;
+        clockwise = Random.Range(0, 2) == 1;
     }
 
-    public void Update()
+    public void UpdateState()
     {
-        if (clockwise)
+        var targetKey = (phase, clockwise) switch
         {
-            var targetKey = progress switch
-            {
-                0 => KeyCode.UpArrow,
-                1 => KeyCode.RightArrow,
-                2 => KeyCode.DownArrow,
-                3 => KeyCode.LeftArrow
-            };
-        }
-        else
+            (0, _) => KeyCode.UpArrow,
+            (1, true) => KeyCode.RightArrow,
+            (1, false) => KeyCode.LeftArrow,
+            (2, _) => KeyCode.DownArrow,
+            (3, true) => KeyCode.LeftArrow,
+            (3, false) => KeyCode.RightArrow,
+        };
+        
+        if (Input.GetKeyDown(targetKey))
         {
+            var isDownBeat = phase == 0 || phase == 2;
+                
+            var allValidKeyDown = K.GetAllValidKeyDown();
+
+            var level = K.GetCurrentArrowLevel(isDownBeat);
+
+            var kEvent = isDownBeat ? K.GetClosestDownBeatEvent() : K.GetClosestUpBeatEvent();
             
+            if (allValidKeyDown.Count > 1 || level == ArrowLevel.Miss)
+            {
+                // Failed
+            }
+            else
+            {
+                if (phase == 3)
+                {
+                    // success
+                }
+                else
+                {
+                    phase++;
+                    expectedSampleTime = kEvent.EndSample + ((int)K.SamplePerBeat / 2);
+                }
+            }
         }
     }
+
 }

@@ -23,7 +23,7 @@ public class S_Water : MonoBehaviour, IState
         ExpectFinalSampleTime = 0;
     }
 
-    public void Update()
+    public void UpdateState()
     {
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {

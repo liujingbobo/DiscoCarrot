@@ -62,6 +62,7 @@ public interface IState
     void Enter();
     void Exit();
     void Reset();
+    void UpdateState();
 }
 
 public interface IUIThumbnail<T>
@@ -73,3 +74,5 @@ public enum ArrowState
 {
     
 }
+
+

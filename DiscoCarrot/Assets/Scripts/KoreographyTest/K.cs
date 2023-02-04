@@ -129,4 +129,9 @@ public static class K
         
         return ArrowLevel.Perfect;
     }
+    
+    public static bool GetOnlyKeyDown(KeyCode key)
+    {
+        return Input.GetKeyDown(key) && GetAllValidKeyDown().Count == 1;
+    }
 }

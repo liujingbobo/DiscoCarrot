@@ -17,26 +17,34 @@ public class S_Plant : MonoBehaviour, IState
     public void Reset()
     {
     }
-    
+
+    public void UpdateState()
+    {
+    }
+
     private void Update()
     {
         var allValidKeyDown = K.GetAllValidKeyDown();
 
-        if (Input.GetKeyDown(KeyCode.DownArrow) && allValidKeyDown.Count == 1)
+        if (allValidKeyDown.Count > 0)
         {
-            var level = K.GetCurrentArrowLevel();
+            if (allValidKeyDown.Contains(KeyCode.DownArrow) && allValidKeyDown.Count == 1)
+            {
+                var level = K.GetCurrentArrowLevel();
             
-            if ( level == ArrowLevel.Miss)
+                if ( level == ArrowLevel.Miss)
+                {
+                    // Failed
+                }
+                else
+                {
+                    // GameEvents.OnFarmActionDone.Invoke();
+                }
+            }else
             {
                 // Failed
             }
-            else
-            {
-                // GameEvents.OnFarmActionDone.Invoke();
-            }
-        }else if (allValidKeyDown.Count > 2)
-        {
-            // Failed
         }
+
     }
 }

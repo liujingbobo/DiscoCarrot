@@ -25,7 +25,7 @@ public class S_Hoe : MonoBehaviour, IState
         MaxSampleTime = 0;
     }
 
-    public void Update()
+    public void UpdateState()
     {
         var allValidKeyDown = K.GetAllValidKeyDown();
 

@@ -11,6 +11,7 @@ public class S_Fertilize : MonoBehaviour, IState
     public void Enter()
     {
         G.Indicator.SwitchTo(PlayerFarmAction.FertilizePlant);
+        Reset();
     }
 
     public void Exit()
@@ -19,10 +20,11 @@ public class S_Fertilize : MonoBehaviour, IState
 
     public void Reset()
     {
-        Reset();
+        downPressed = false;
+        expectedSampleTime = 0;
     }
 
-    private void Update()
+    public void UpdateState()
     {
         if (!downPressed && Input.GetKeyDown(KeyCode.DownArrow))
         {
