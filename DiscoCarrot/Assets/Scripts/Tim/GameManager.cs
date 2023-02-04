@@ -9,9 +9,15 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager singleton;
     public GameManagerContext sharedContext = new GameManagerContext();
     public SimpleStateMachine<GameLoopState, GameManagerContext> stateMachine =
         new SimpleStateMachine<GameLoopState, GameManagerContext>();
+
+    private void Awake()
+    {
+        singleton = this;
+    }
 
     private void Start()
     {
