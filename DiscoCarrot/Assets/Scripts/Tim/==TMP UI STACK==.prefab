@@ -2323,7 +2323,7 @@ GameObject:
   - component: {fileID: 4473206019007118139}
   - component: {fileID: 4473206019007118140}
   m_Layer: 0
-  m_Name: Panel
+  m_Name: PanelRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3288,7 +3288,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!114 &4473206019632050845
 MonoBehaviour:
@@ -3342,12 +3342,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95f6b4a33e2258c49b256347ee4b343d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carrotSprites: []
-  CarrotBarImages: []
-  StarImages: []
-  carrotAndMissCountTexts: []
-  carrotAndMissScoreTexts: []
-  totalScoreText: {fileID: 0}
+  carrotSprites:
+  - {fileID: 21300000, guid: bd80d36aae55ff24a8552c65ac5e6a4d, type: 3}
+  - {fileID: 21300000, guid: ec58139abd7f9494884e249b8aa20816, type: 3}
+  CarrotBarImages:
+  - {fileID: 4473206018766416319}
+  - {fileID: 6085054556171813902}
+  - {fileID: 3101953527684183834}
+  StarImages:
+  - {fileID: 7761334790772872208}
+  - {fileID: 2477950890395355532}
+  - {fileID: 5013526296303559153}
+  - {fileID: 8197276762867533484}
+  - {fileID: 3996878763882402134}
+  - {fileID: 5041911318327200116}
+  carrotAndMissCountTexts:
+  - {fileID: 4473206019541497432}
+  - {fileID: 7647144258573674830}
+  - {fileID: 5494120699684339948}
+  - {fileID: 2182117983912705980}
+  - {fileID: 6856640983511015680}
+  carrotAndMissScoreTexts:
+  - {fileID: 4783127075631135960}
+  - {fileID: 552405637085643297}
+  - {fileID: 8585719085338077358}
+  - {fileID: 714424161084032484}
+  - {fileID: 6627909486725299851}
+  totalScoreText: {fileID: 1843885930808607454}
+  againButton: {fileID: 4473206019787634837}
+  homeButton: {fileID: 4473206019975300791}
+  BackGround: {fileID: 5465702753117549223}
+  PanelRoot: {fileID: 4473206019007118140}
 --- !u!1 &4473206019665485595
 GameObject:
   m_ObjectHideFlags: 0
@@ -5203,7 +5228,7 @@ GameObject:
   - component: {fileID: 3001124936663185714}
   - component: {fileID: 5465702753117549223}
   m_Layer: 0
-  m_Name: Panel
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
