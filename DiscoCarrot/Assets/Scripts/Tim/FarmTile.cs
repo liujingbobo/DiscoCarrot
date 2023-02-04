@@ -21,7 +21,8 @@ public class FarmTile : MonoBehaviour
         NeedFertilize,
         NeedDebug,
     }
-    
+
+    public FarmTilePopUp popUp;
     //config values, set in editor
     public Vector2Int seedStateNeedWaterSpawnWindow; //define watering windows for seed events
     public Vector2Int[] sproutStateNeedsSpawnWindow; //define three windows for sprout events
@@ -146,7 +147,8 @@ public class FarmTile : MonoBehaviour
         {
             case FarmTileEventFlag.NoEvent:
                 if (currentEventFlag == FarmTileEventFlag.NoEvent) return;
-                //TODO close pop up
+                //close pop up
+                popUp.ClosePopUp();
                 //stop all sprite GO
                 foreach (var g in eventFlagSpriteGOs)
                 {
@@ -157,7 +159,7 @@ public class FarmTile : MonoBehaviour
             case FarmTileEventFlag.NeedFertilize:
             case FarmTileEventFlag.NeedDebug:
                 //TODO: trigger pop up here
-                
+                popUp.StartPopUp(targetFlag, eventResponseTime);
                 //show sprite GO
                 eventFlagSpriteGOs[(int) targetFlag - 1].SetActive(true);
                 break;

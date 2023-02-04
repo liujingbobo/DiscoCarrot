@@ -21,7 +21,8 @@ public class Player : MonoBehaviour
     [SpineAnimation] public string debugSeedAnimationName;
     [SpineAnimation] public string fertilize0SeedAnimationName;
     [SpineAnimation] public string fertilize1SeedAnimationName;
-    [SpineAnimation] public string harvestAnimationName;
+    [SpineAnimation] public string harvest0AnimationName;
+    [SpineAnimation] public string harvest1AnimationName;
     
     public Spine.AnimationState spineAnimationState;
     public Spine.Skeleton skeleton;
@@ -143,8 +144,11 @@ public class Player : MonoBehaviour
             case PlayerAnimName.Fertilize:
                 spineAnimationState.SetAnimation(0, fertilize1SeedAnimationName, false);
                 break;
-            case PlayerAnimName.Harvest:
-                spineAnimationState.SetAnimation(0, harvestAnimationName, false);
+            case PlayerAnimName.Harvest0:
+                spineAnimationState.SetAnimation(0, harvest0AnimationName, false);
+                break;
+            case PlayerAnimName.Harvest1:
+                spineAnimationState.SetAnimation(0, harvest1AnimationName, false);
                 break;
         }
     }

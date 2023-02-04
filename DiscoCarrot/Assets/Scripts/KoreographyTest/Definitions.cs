@@ -53,7 +53,7 @@ public static class Config
             {PlayerFarmAction.WaterPlant,PlayerAnimName.Watering },
             {PlayerFarmAction.FertilizePlant,PlayerAnimName.Fertilize },
             {PlayerFarmAction.DebugPlant,PlayerAnimName.Debugging },
-            {PlayerFarmAction.HarvestPlant,PlayerAnimName.Harvest },
+            {PlayerFarmAction.HarvestPlant,PlayerAnimName.Harvest1 },
         };
 }
 
@@ -70,7 +70,8 @@ public enum PlayerAnimName
     Debugging,
     ReadyFertilize, //预备施肥
     Fertilize, //施肥
-    Harvest,
+    Harvest0,
+    Harvest1,
 }
 
 public interface IState

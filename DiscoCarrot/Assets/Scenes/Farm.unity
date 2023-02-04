@@ -552,7 +552,7 @@ MonoBehaviour:
   disableRenderingOnOverride: 1
   updateTiming: 1
   unscaledTime: 0
-  _animationName: idle_0
+  _animationName: idle
   loop: 1
   timeScale: 1
 --- !u!23 &865246315
@@ -1390,19 +1390,20 @@ MonoBehaviour:
   cc: {fileID: 1872770013}
   speed: 0.04
   skeletonAnimation: {fileID: 865246314}
-  idleAnimationName: idle_0
+  idleAnimationName: idle
   moveAnimationName: move
   sadAnimationName: miss
   plow0AnimationName: hoeing_0
   plow1AnimationName: hoeing_1
   plantSeedAnimationName: sowing
   waterSeedAnimationName: watering
-  debugSeedAnimationName: hoeing_0
-  fertilize0SeedAnimationName: hoeing_0
-  fertilize1SeedAnimationName: hoeing_0
-  harvestAnimationName: hoeing_0
+  debugSeedAnimationName: insecticide
+  fertilize0SeedAnimationName: feed_0
+  fertilize1SeedAnimationName: feed_1
+  harvest0AnimationName: harvest_0
+  harvest1AnimationName: harvest_1
   currentAnimState: 0
-  canMove: 0
+  failSaveBeatCount: -1
 --- !u!114 &1872770019
 MonoBehaviour:
   m_ObjectHideFlags: 0
