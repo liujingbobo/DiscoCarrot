@@ -23,19 +23,27 @@ public class Player : MonoBehaviour
     [SpineAnimation] public string fertilize1SeedAnimationName;
     [SpineAnimation] public string harvestAnimationName;
     
-    
     public Spine.AnimationState spineAnimationState;
     public Spine.Skeleton skeleton;
 
     public PlayerAnimName currentAnimState;
-    public bool canMove;
-
-
+    public int failSaveBeatCount = -1;
+    
     void Start()
     {
         spineAnimationState = skeletonAnimation.AnimationState;
         skeleton = skeletonAnimation.Skeleton;
         SwitchToAnimState(PlayerAnimName.Idle);
+        GameEvents.OnOneBeatPassed += OnOneBeatPassed;
+    }
+
+    private void OnOneBeatPassed()
+    {
+        if (currentAnimState != PlayerAnimName.Idle && currentAnimState != PlayerAnimName.Move)
+        {
+            if(failSaveBeatCount == 0) SwitchToAnimState(PlayerAnimName.Idle);
+            if (failSaveBeatCount > 0) failSaveBeatCount -= 1;
+        }
     }
 
     public void ResetPlayer()
@@ -46,7 +54,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (canMove) MovableStateUpdate();
+        MovableStateUpdate();
     }
 
     private void MovableStateUpdate()
@@ -94,50 +102,50 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SwitchToAnimState(PlayerAnimName animName)
+    public void SwitchToAnimState(PlayerAnimName targetAnimName)
     {
-        currentAnimState = animName;
-        canMove = currentAnimState == PlayerAnimName.Idle || currentAnimState == PlayerAnimName.Move;
-        PlayAnim(animName);
+        currentAnimState = targetAnimName;
+        PlayAnim(targetAnimName);
     }
 
-    public void PlayAnim(PlayerAnimName animName)
+    private void PlayAnim(PlayerAnimName animName)
     {
+        failSaveBeatCount = 1;
         switch (animName)
         {
-                case PlayerAnimName.Idle:
-                    spineAnimationState.SetAnimation(0, idleAnimationName, true);
-                    break;
-                case PlayerAnimName.Move:
-                    spineAnimationState.SetAnimation(0, moveAnimationName, true);
-                    break;
-                case PlayerAnimName.Sad:
-                    spineAnimationState.SetAnimation(0, sadAnimationName, false);
-                    break;
-                case PlayerAnimName.PlowUp:
-                    spineAnimationState.SetAnimation(0, plow0AnimationName, false);
-                    break;
-                case PlayerAnimName.PlowDown:
-                    spineAnimationState.SetAnimation(0, plow1AnimationName, false);
-                    break;
-                case PlayerAnimName.PlantSeed:
-                    spineAnimationState.SetAnimation(0, plantSeedAnimationName, false);
-                    break;
-                case PlayerAnimName.Watering:
-                    spineAnimationState.SetAnimation(0, waterSeedAnimationName, false);
-                    break;
-                case PlayerAnimName.Debugging:
-                    spineAnimationState.SetAnimation(0, debugSeedAnimationName, false);
-                    break;
-                case PlayerAnimName.ReadyFertilize:
-                    spineAnimationState.SetAnimation(0, fertilize0SeedAnimationName, false);
-                    break;
-                case PlayerAnimName.Fertilize:
-                    spineAnimationState.SetAnimation(0, fertilize1SeedAnimationName, false);
-                    break;
-                case PlayerAnimName.Harvest:
-                    spineAnimationState.SetAnimation(0, harvestAnimationName, false);
-                    break;
+            case PlayerAnimName.Idle:
+                spineAnimationState.SetAnimation(0, idleAnimationName, true);
+                break;
+            case PlayerAnimName.Move:
+                spineAnimationState.SetAnimation(0, moveAnimationName, true);
+                break;
+            case PlayerAnimName.Sad:
+                spineAnimationState.SetAnimation(0, sadAnimationName, false);
+                break;
+            case PlayerAnimName.PlowUp:
+                spineAnimationState.SetAnimation(0, plow0AnimationName, false);
+                break;
+            case PlayerAnimName.PlowDown:
+                spineAnimationState.SetAnimation(0, plow1AnimationName, false);
+                break;
+            case PlayerAnimName.PlantSeed:
+                spineAnimationState.SetAnimation(0, plantSeedAnimationName, false);
+                break;
+            case PlayerAnimName.Watering:
+                spineAnimationState.SetAnimation(0, waterSeedAnimationName, false);
+                break;
+            case PlayerAnimName.Debugging:
+                spineAnimationState.SetAnimation(0, debugSeedAnimationName, false);
+                break;
+            case PlayerAnimName.ReadyFertilize:
+                spineAnimationState.SetAnimation(0, fertilize0SeedAnimationName, false);
+                break;
+            case PlayerAnimName.Fertilize:
+                spineAnimationState.SetAnimation(0, fertilize1SeedAnimationName, false);
+                break;
+            case PlayerAnimName.Harvest:
+                spineAnimationState.SetAnimation(0, harvestAnimationName, false);
+                break;
         }
     }
 }
