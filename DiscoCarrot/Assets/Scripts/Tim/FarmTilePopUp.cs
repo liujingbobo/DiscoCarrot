@@ -24,7 +24,7 @@ public class FarmTilePopUp : MonoBehaviour
         Reset();
     }
 
-    private void Reset()
+    public void Reset()
     {
         popupRoot.localScale = Vector3.zero;
     }

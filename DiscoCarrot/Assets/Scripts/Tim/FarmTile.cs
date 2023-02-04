@@ -198,6 +198,7 @@ public class FarmTile : MonoBehaviour
         beatCountSinceSeeded = 0;
         
         BeatsToTriggerEvent.Clear();
+        popUp.Reset();
         turnToSproutedOnBeat = 0;
         turnToFullyGrownOnBeat = 0;
         SetRandomBeatTriggerValues();
