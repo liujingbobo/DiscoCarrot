@@ -89,6 +89,7 @@ public class Player : MonoBehaviour
 
     public void ResetPlayer()
     {
+        Debug.Log($"timtest {startPosition} {transform.position} {startPosition - transform.position}");
         cc.Move(startPosition - transform.position);
         transform.localPosition = Vector3.zero;
         SwitchToAnimState(PlayerAnimName.Idle);
