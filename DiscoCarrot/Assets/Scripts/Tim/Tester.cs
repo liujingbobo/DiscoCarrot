@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
 public class Tester : MonoBehaviour
 {
+    public Player rabbitPlayer;
     public TMP_Text textMeshProText;
     public int beatCountFromStart;
     public FarmTile targetTile;
@@ -34,8 +36,11 @@ public class Tester : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(targetTile != null)
+            if (targetTile != null)
+            {
+                rabbitPlayer.PlayAnim(Config.tmpFarmActionToAnim[targetTile.GetNeededPlayerFarmAction()]);
                 GameEvents.OnFarmActionDone.Invoke(targetTile, targetTile.GetNeededPlayerFarmAction(), ActionLevel.Perfect);
+            }
         }
 
         textMeshProText.text = beatCountFromStart.ToString();

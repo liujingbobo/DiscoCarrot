@@ -391,7 +391,7 @@ Transform:
   - {fileID: 1740901684}
   - {fileID: 309868161}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &779130457
 GameObject:
@@ -1068,6 +1068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb3ca75b9f2dcc48a519500111a86b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rabbitPlayer: {fileID: 1872770018}
   textMeshProText: {fileID: 1684280936}
   beatCountFromStart: 0
   targetTile: {fileID: 0}
@@ -1086,7 +1087,7 @@ Transform:
   m_Children:
   - {fileID: 884994924}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1684280934
 GameObject:
@@ -1372,7 +1373,7 @@ Transform:
   m_Children:
   - {fileID: 865246310}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1872770018
 MonoBehaviour:
@@ -1387,10 +1388,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cc: {fileID: 1872770013}
-  speed: 0.05
-  runAnimationName: idle_0
-  idleAnimationName: idle_0
+  speed: 0.04
   skeletonAnimation: {fileID: 865246314}
+  idleAnimationName: idle_0
+  moveAnimationName: move
+  sadAnimationName: miss
+  plow0AnimationName: hoeing_0
+  plow1AnimationName: hoeing_1
+  plantSeedAnimationName: sowing
+  waterSeedAnimationName: watering
+  debugSeedAnimationName: hoeing_0
+  fertilize0SeedAnimationName: hoeing_0
+  fertilize1SeedAnimationName: hoeing_0
+  harvestAnimationName: hoeing_0
   currentAnimState: 0
   canMove: 0
 --- !u!114 &1872770019

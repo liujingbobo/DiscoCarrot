@@ -10,16 +10,27 @@ public class Player : MonoBehaviour
     public CharacterController cc;
     public float speed;
 
-    [SpineAnimation] public string runAnimationName;
-    [SpineAnimation] public string idleAnimationName;
     public SkeletonAnimation skeletonAnimation;
+    [SpineAnimation] public string idleAnimationName;
+    [SpineAnimation] public string moveAnimationName;
+    [SpineAnimation] public string sadAnimationName;
+    [SpineAnimation] public string plow0AnimationName;
+    [SpineAnimation] public string plow1AnimationName;
+    [SpineAnimation] public string plantSeedAnimationName;
+    [SpineAnimation] public string waterSeedAnimationName;
+    [SpineAnimation] public string debugSeedAnimationName;
+    [SpineAnimation] public string fertilize0SeedAnimationName;
+    [SpineAnimation] public string fertilize1SeedAnimationName;
+    [SpineAnimation] public string harvestAnimationName;
+    
+    
     public Spine.AnimationState spineAnimationState;
     public Spine.Skeleton skeleton;
 
     public PlayerAnimName currentAnimState;
     public bool canMove;
-    
-    
+
+
     void Start()
     {
         spineAnimationState = skeletonAnimation.AnimationState;
@@ -27,9 +38,15 @@ public class Player : MonoBehaviour
         SwitchToAnimState(PlayerAnimName.Idle);
     }
 
+    public void ResetPlayer()
+    {
+        SwitchToAnimState(PlayerAnimName.Idle);
+        transform.localPosition = Vector3.zero;
+    }
+
     private void Update()
     {
-        if(canMove) MovableStateUpdate();
+        if (canMove) MovableStateUpdate();
     }
 
     private void MovableStateUpdate()
@@ -61,33 +78,66 @@ public class Player : MonoBehaviour
             else cc.Move(Vector3.zero);
 
             //animation
-            if (spineAnimationState.GetCurrent(0).Animation.Name != runAnimationName && cc.velocity.magnitude > 0)
+            if (currentAnimState == PlayerAnimName.Idle && cc.velocity.magnitude > 0)
             {
-                spineAnimationState.SetAnimation(0, runAnimationName, true);
+                SwitchToAnimState(PlayerAnimName.Move);
             }
-        
-            if (spineAnimationState.GetCurrent(0).Animation.Name != idleAnimationName && cc.velocity.magnitude <= 0)
+
+            if (currentAnimState == PlayerAnimName.Move && cc.velocity.magnitude <= 0)
             {
-                spineAnimationState.SetAnimation(0, idleAnimationName, true);
+                SwitchToAnimState(PlayerAnimName.Idle);
             }
-            
+
             //face direction
-            if(direction.x < 0) skeleton.ScaleX = -1;
-            if(direction.x > 0) skeleton.ScaleX = 1;
+            if (direction.x < 0) skeleton.ScaleX = -1;
+            if (direction.x > 0) skeleton.ScaleX = 1;
         }
     }
-    
+
     public void SwitchToAnimState(PlayerAnimName animName)
     {
         currentAnimState = animName;
-        if (animName == PlayerAnimName.Idle || animName == PlayerAnimName.Move)
+        canMove = currentAnimState == PlayerAnimName.Idle || currentAnimState == PlayerAnimName.Move;
+        PlayAnim(animName);
+    }
+
+    public void PlayAnim(PlayerAnimName animName)
+    {
+        switch (animName)
         {
-            canMove = true;
-        }
-        else
-        {
-            spineAnimationState.SetAnimation(0, animName.ToString(), true);
+                case PlayerAnimName.Idle:
+                    spineAnimationState.SetAnimation(0, idleAnimationName, true);
+                    break;
+                case PlayerAnimName.Move:
+                    spineAnimationState.SetAnimation(0, moveAnimationName, true);
+                    break;
+                case PlayerAnimName.Sad:
+                    spineAnimationState.SetAnimation(0, sadAnimationName, false);
+                    break;
+                case PlayerAnimName.PlowUp:
+                    spineAnimationState.SetAnimation(0, plow0AnimationName, false);
+                    break;
+                case PlayerAnimName.PlowDown:
+                    spineAnimationState.SetAnimation(0, plow1AnimationName, false);
+                    break;
+                case PlayerAnimName.PlantSeed:
+                    spineAnimationState.SetAnimation(0, plantSeedAnimationName, false);
+                    break;
+                case PlayerAnimName.Watering:
+                    spineAnimationState.SetAnimation(0, waterSeedAnimationName, false);
+                    break;
+                case PlayerAnimName.Debugging:
+                    spineAnimationState.SetAnimation(0, debugSeedAnimationName, false);
+                    break;
+                case PlayerAnimName.ReadyFertilize:
+                    spineAnimationState.SetAnimation(0, fertilize0SeedAnimationName, false);
+                    break;
+                case PlayerAnimName.Fertilize:
+                    spineAnimationState.SetAnimation(0, fertilize1SeedAnimationName, false);
+                    break;
+                case PlayerAnimName.Harvest:
+                    spineAnimationState.SetAnimation(0, harvestAnimationName, false);
+                    break;
         }
     }
-    
 }

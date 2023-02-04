@@ -42,6 +42,22 @@ public enum PlayerFarmAction
     HarvestPlant,
 }
 
+public static class Config
+{
+    public static Dictionary<PlayerFarmAction, PlayerAnimName> tmpFarmActionToAnim =
+        new Dictionary<PlayerFarmAction, PlayerAnimName>()
+        {
+            {PlayerFarmAction.NoActionNeeded,PlayerAnimName.Idle},
+            {PlayerFarmAction.PlowLand,PlayerAnimName.PlowDown},
+            {PlayerFarmAction.PlantSeed,PlayerAnimName.PlantSeed },
+            {PlayerFarmAction.WaterPlant,PlayerAnimName.Watering },
+            {PlayerFarmAction.FertilizePlant,PlayerAnimName.Fertilize },
+            {PlayerFarmAction.DebugPlant,PlayerAnimName.Debugging },
+            {PlayerFarmAction.HarvestPlant,PlayerAnimName.Harvest },
+        };
+}
+
+
 public enum PlayerAnimName
 {
     Idle,
