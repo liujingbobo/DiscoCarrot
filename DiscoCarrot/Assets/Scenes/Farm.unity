@@ -4524,6 +4524,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 344436684, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132
@@ -4740,6 +4744,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1201797376, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132
@@ -5039,6 +5047,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 966944735, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132
@@ -5255,6 +5267,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1826142908, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132
@@ -6194,6 +6210,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -783595760, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132
@@ -6275,6 +6295,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1107270625, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132
@@ -6572,6 +6596,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1066911020, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132
@@ -6653,6 +6681,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestFarmTile (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 4078547102859370021, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2023203419, guid: 70346e34d21be2149bf1452b2fa6dbd0, type: 3}
     - target: {fileID: 6948684936563575036, guid: 0b9f669ad023a9d4ba7ac709176f3256, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9007132

@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
 
     public PlayerAnimName currentAnimState;
     public int failSaveBeatCount = -1;
-    
+
     void Start()
     {
         startPosition = transform.position;
@@ -89,9 +89,7 @@ public class Player : MonoBehaviour
 
     public void ResetPlayer()
     {
-        Debug.Log($"timtest {startPosition} {transform.position} {startPosition - transform.position}");
         cc.Move(startPosition - transform.position);
-        transform.localPosition = Vector3.zero;
         SwitchToAnimState(PlayerAnimName.Idle);
         SetPlayerMovable(false);
     }
