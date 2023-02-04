@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Tester : MonoBehaviour
 {
+    public TMP_Text textMeshProText;
     public int beatCountFromStart;
-    public FarmTile[] targetTiles;
+    public FarmTile targetTile;
     public float bpm = 123;
     void Start()
     {
@@ -18,30 +20,25 @@ public class Tester : MonoBehaviour
     
     private void OnReachedFarmTile(FarmTile arg1, PlayerFarmAction arg2)
     {
+        targetTile = arg1;
         Debug.Log($"OnReachedFarmTile, detected need action {arg2}");
     }
     private void OnLeaveFarmTile(FarmTile obj)
     {
+        if (targetTile == obj) targetTile = null;
         Debug.Log($"OnLeaveFarmTile");
     }
     
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            foreach (var targetTile in targetTiles)
-            {
-                GameEvents.OnFarmActionDone.Invoke(targetTile, PlayerFarmAction.PlowLand, ActionLevel.Perfect);
-            }
+            if(targetTile != null)
+                GameEvents.OnFarmActionDone.Invoke(targetTile, targetTile.GetNeededPlayerFarmAction(), ActionLevel.Perfect);
         }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            foreach (var targetTile in targetTiles)
-            {
-                GameEvents.OnFarmActionDone.Invoke(targetTile, PlayerFarmAction.PlantSeed, ActionLevel.Perfect);
-            }
-        }
+
+        textMeshProText.text = beatCountFromStart.ToString();
     }
 
     IEnumerator AddBeat()
