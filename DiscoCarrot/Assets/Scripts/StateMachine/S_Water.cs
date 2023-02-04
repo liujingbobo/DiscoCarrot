@@ -8,6 +8,7 @@ public class S_Water : MonoBehaviour, IState
     private bool downPressed = false;
     private int ExpectFinalSampleTime;
     private int MaxSampleTime;
+    private PressLevel firstLevel;
     public void Enter()
     {
         Reset();
@@ -45,9 +46,11 @@ public class S_Water : MonoBehaviour, IState
                     }
                     else
                     {
+                        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Watering);
                         downPressed = true;
                         ExpectFinalSampleTime = kEvent.EndSample + ( 2 * (int)K.SamplePerBeat);
                         MaxSampleTime = K.GetMaxSampleTime(kEvent, 2);
+                        firstLevel = level;
                         // UpdateResult
                         G.Indicator.UpdateState(level.ToArrowState());
                     }
@@ -79,7 +82,11 @@ public class S_Water : MonoBehaviour, IState
                     {
                         // Success
                         G.Indicator.UpdateState(level.ToArrowState());
-                        G.StateMachine.Success(ActionLevel.Perfect);
+                        G.StateMachine.Success((firstLevel, level) switch
+                        {
+                            (PressLevel.Perfect, PressLevel.Perfect) => ActionLevel.Perfect,
+                            _ => ActionLevel.Good
+                        });
                     }
                 }
                 else

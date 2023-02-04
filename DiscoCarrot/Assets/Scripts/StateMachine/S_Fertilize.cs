@@ -8,6 +8,7 @@ public class S_Fertilize : MonoBehaviour, IState
     private bool downPressed;
     private int expectedSampleTime;
     private int maxSampleTime;
+    private PressLevel firstLevel;
     
     public void Enter()
     {
@@ -48,6 +49,7 @@ public class S_Fertilize : MonoBehaviour, IState
                         downPressed = true;
                         expectedSampleTime = kEvent.EndSample + (int)(0.5 * K.SamplePerBeat);
                         maxSampleTime = K.GetMaxSampleTime(kEvent, 0.5f);
+                        firstLevel = level;
                         // UpdateState
                         G.Indicator.UpdateState(level.ToArrowState());
                         return;
@@ -57,7 +59,6 @@ public class S_Fertilize : MonoBehaviour, IState
                 {
                     // Failed
                     G.StateMachine.Fail();
-
                 }
 
             }else if (downPressed)
@@ -77,7 +78,11 @@ public class S_Fertilize : MonoBehaviour, IState
                         // Success
                         // GameEvents.OnFarmActionDone.Invoke();
                         G.Indicator.UpdateState(level.ToArrowState());
-                        G.StateMachine.Success(ActionLevel.Perfect);
+                        G.StateMachine.Success((firstLevel, level) switch
+                        {
+                            (PressLevel.Perfect, PressLevel.Perfect) => ActionLevel.Perfect,
+                            _ => ActionLevel.Good
+                        });
                     }
                 }
                 else

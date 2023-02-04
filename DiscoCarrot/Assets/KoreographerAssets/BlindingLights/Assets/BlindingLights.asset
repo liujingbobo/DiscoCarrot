@@ -23,8 +23,13 @@ MonoBehaviour:
     beatsPerMeasure: 4
     bStartNewMeasure: 1
   - sectionName: Song
-    startSample: 16048
+    startSample: 13163
     samplesPerBeat: 16842.105263157893
     beatsPerMeasure: 4
     bStartNewMeasure: 1
-  mTracks: []
+  mTracks:
+  - {fileID: 11400000, guid: ea65bd0589ea132458a2656f8b05237c, type: 2}
+  - {fileID: 11400000, guid: f5024981ab0f7104da2126e93d205b20, type: 2}
+  - {fileID: 11400000, guid: e5549ada030ba604a9b6903d578062de, type: 2}
+  - {fileID: 11400000, guid: 3f1518c10668e0d45af7afab6b76c1a1, type: 2}
+  - {fileID: 11400000, guid: 4bf8d92e1f242804bb70ef726a296ecc, type: 2}

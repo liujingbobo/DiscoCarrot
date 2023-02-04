@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using SonicBloom.Koreo;
+using SonicBloom.Koreo.Players;
 using TimPlugin;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -47,8 +49,7 @@ public class GameManager : MonoBehaviour
         public Canvas logoCanvas;
         
         //song picker
-        public Button pickSongButton;
-        public Canvas pickSongCanvas;
+        public GameObject pickSongCanvas;
         
         //GameReadyStart
         public Image readyTextImage;
@@ -62,11 +63,16 @@ public class GameManager : MonoBehaviour
         public Button againButton;
         public Button homeButton;
         
-        
-        
         //cached runtime values
         public List<int> harvestedCarrots = new List<int>(4);
         public int missedCount = 0;
+        
+        // Koreographer
+        public GameSettings settings;
+        public SimpleMusicPlayer musicPlayer;
+        public Koreographer koreographer;
+        public OperationIndicator indicator;
+        public FarmingStateMachine stateMachine;
     }
     
     public enum GameLoopState
@@ -86,6 +92,12 @@ public class GameManager : MonoBehaviour
             base.EnterState();
             stateMachine.sharedContext.logoCanvas.gameObject.SetActive(true);
             stateMachine.sharedContext.startButton.onClick.AddListener(OnButtonClick);
+
+            G.Settings = stateMachine.sharedContext.settings;
+            K.koreographer = stateMachine.sharedContext.koreographer;
+            K.musicPlayer = stateMachine.sharedContext.musicPlayer;
+            G.Indicator = stateMachine.sharedContext.indicator;
+            G.StateMachine = stateMachine.sharedContext.stateMachine;
         }
         public override void ExitState()
         {
@@ -104,19 +116,12 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.pickSongCanvas.gameObject.SetActive(true);
-            stateMachine.sharedContext.pickSongButton.onClick.AddListener(OnButtonClick);
+            stateMachine.sharedContext.pickSongCanvas.SetActive(true);
         }
         public override void ExitState()
         {
             base.ExitState();
-            stateMachine.sharedContext.pickSongCanvas.gameObject.SetActive(false);
-            stateMachine.sharedContext.pickSongButton.onClick.RemoveListener(OnButtonClick);
-        }
-
-        void OnButtonClick()
-        {
-            SwitchToState(GameLoopState.GameReadyStart);
+            stateMachine.sharedContext.pickSongCanvas.SetActive(false);
         }
     }
     public class GameReadyStartState : SimpleStateInstance<GameLoopState, GameManagerContext>
@@ -137,21 +142,31 @@ public class GameManager : MonoBehaviour
             stateMachine.sharedContext.goTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.goTextImage.color = Color.white;
             
-            
-            var readyInTweener = stateMachine.sharedContext.readyTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
-            var readyOutTweener = stateMachine.sharedContext.readyTextImage.DOFade(0, 0.5f);
-            var goInTweener = stateMachine.sharedContext.goTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
-            var goOutTweener = stateMachine.sharedContext.goTextImage.DOFade(0, 0.5f);
-            var sequence = DOTween.Sequence();
-            sequence.AppendInterval(1f)
-                .AppendCallback(()=>{SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.ready);})
-                .Append(readyInTweener)
-                .Append(readyOutTweener)
-                .AppendInterval(1f)
-                .AppendCallback(()=>{SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.go);})
-                .Append(goInTweener)
-                .Append(goOutTweener)
-                .AppendCallback(() => { SwitchToState(GameLoopState.GameRunning); });
+            Koreographer.Instance.ClearEventRegister();
+
+            K.musicPlayer.Play();
+
+            Koreographer.Instance.RegisterForEvents("Ready", DoReady);
+            Koreographer.Instance.RegisterForEvents("Start", DoStart);
+
+            void DoReady(KoreographyEvent kEvent)
+            {
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.ready);
+                var sequence = DOTween.Sequence();
+                var readyInTweener = stateMachine.sharedContext.readyTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+                var readyOutTweener = stateMachine.sharedContext.readyTextImage.DOFade(0, 0.5f);
+                sequence.Append(readyInTweener).Append(readyOutTweener);
+            }
+
+            void DoStart(KoreographyEvent kEvent)
+            {
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.go);
+                var sequence = DOTween.Sequence();
+                var goInTweener = stateMachine.sharedContext.goTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+                var goOutTweener = stateMachine.sharedContext.goTextImage.DOFade(0, 0.5f);
+                sequence.Append(goInTweener).Append(goOutTweener);
+                SwitchToState(GameLoopState.GameRunning); 
+            }
         }
         
         public override void ExitState()
@@ -166,12 +181,27 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
+            Koreographer.Instance.RegisterForEvents("DownBeat", _ =>
+            {
+                GameEvents.OnDownBeat.Invoke();
+            });            
+            
+            // Koreographer.Instance.RegisterForEvents("UpBeat", _ =>
+            // {
+            //     GameEvents.OnUpBeat.Invoke();
+            // });        
+            
+            Koreographer.Instance.RegisterForEvents("End", _ =>
+            {
+                SwitchToState(GameLoopState.GameEnd);
+            });
+            
             stateMachine.sharedContext.harvestedCarrots = new List<int>(4);
             GameEvents.OnHarvestCarrot += OnHarvestCarrot;
             
             stateMachine.sharedContext.player.SetPlayerMovable(true);
-            DOTween.Sequence().AppendInterval(90f)
-                .AppendCallback(() => { SwitchToState(GameLoopState.GameEnd); });
+            // DOTween.Sequence().AppendInterval(90f)
+            //     .AppendCallback(() => { SwitchToState(GameLoopState.GameEnd); });
         }
         
         public override void ExitState()
@@ -194,6 +224,8 @@ public class GameManager : MonoBehaviour
             //set text tween
             stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.endTextImage.color = Color.white;
+            
+            Koreographer.Instance.ClearEventRegister();;
             
             var endInTweener = stateMachine.sharedContext.endTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
             var endOutTweener = stateMachine.sharedContext.endTextImage.DOFade(0, 0.5f);

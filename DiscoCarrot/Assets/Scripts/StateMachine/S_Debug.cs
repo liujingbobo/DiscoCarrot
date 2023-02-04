@@ -9,7 +9,7 @@ public class S_Debug : MonoBehaviour, IState
     private int phase;
     private bool clockwise;
     private int MaxSampleTime;
-
+    private bool allPerfect;
     public void Enter()
     {
         G.Indicator.SwitchTo(PlayerFarmAction.DebugPlant);
@@ -63,13 +63,14 @@ public class S_Debug : MonoBehaviour, IState
                     {
                         // success
                         G.Indicator.UpdateState(level.ToArrowState());
-                        G.StateMachine.Success(ActionLevel.Perfect);
+                        G.StateMachine.Success(allPerfect? ActionLevel.Perfect : ActionLevel.Good);
                     }
                     else
                     {
                         if (phase == 0)
                         {
                             MaxSampleTime = K.GetMaxSampleTime(kEvent, 1.5f);
+                            allPerfect = true;
                         }
                     
                         phase++;

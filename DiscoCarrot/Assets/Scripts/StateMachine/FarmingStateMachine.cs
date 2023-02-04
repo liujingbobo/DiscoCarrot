@@ -58,53 +58,41 @@ public class FarmingStateMachine : SerializedMonoBehaviour
             StatesDictionary[curAction].Enter();
         }
     }
-
-    // public void Fail()
-    // {
-    //     active = false;
-    //     // GameManager.singleton.k
-    //     // play idle
-    // }
-
+    
     public void Fail()
     {
+        G.Indicator.Present(ActionLevel.Miss);
         G.Indicator.UpdateState(ArrowState.Miss);
         active = false;
         StartCoroutine(FailCor());
-        // switch fail anim
-        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Sad);
-        // ---
-        // switch to idle
-        
     }
 
     public void Success(ActionLevel level)
     {
         active = false;
-        StartCoroutine(SuccessCor());
+        G.Indicator.Present(level);
+        StartCoroutine(SuccessCor(level));
     }
 
     IEnumerator FailCor()
     {
         GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Sad);
         finished = false;
-        yield return new WaitForSeconds(K.SamplePerBeat * K.SamplePerSecond);
+        var sec = K.BeatsPerMinute;
+        yield return new WaitForSeconds(60/(float)K.BeatsPerMinute);
         GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Idle);
         finished = true;
         Reset();
     }  
     
-    IEnumerator SuccessCor()
+    IEnumerator SuccessCor(ActionLevel level)
     {
-        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Sad);
-        finished = false;
-        yield return new WaitForSeconds(K.SamplePerBeat * K.SamplePerSecond);
+        G.Indicator.Close();
         GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Idle);
-        
-        // TODO: 
-        GameEvents.OnFarmActionDone.Invoke(GameEvents.currentTile, curAction, ActionLevel.Perfect);
+        GameEvents.OnFarmActionDone.Invoke(GameEvents.currentTile, curAction, level);
         finished = true;
         Reset();
+        yield return null;
     }
 
     public void Reset()
@@ -114,13 +102,5 @@ public class FarmingStateMachine : SerializedMonoBehaviour
             StatesDictionary[curAction].Reset();
         }
         G.Indicator.Reset();
-    }
-
-    public void SetCurrentTile(string action)
-    {
-        PlayerFarmAction result = 0;
-        Enum.TryParse(action, out  result);
-        curAction = result;
-        SwitchTo(result);
     }
 }
