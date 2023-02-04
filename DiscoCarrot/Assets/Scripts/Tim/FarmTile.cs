@@ -231,10 +231,10 @@ public class FarmTile : MonoBehaviour
 
         turnToFullyGrownOnBeat = tmpEndBeat;
 
-        foreach (var pair in BeatsToTriggerEvent)
+        /*foreach (var pair in BeatsToTriggerEvent)
         {
             Debug.Log($"timtest beat:{pair.Key} , event: {pair.Value}");
-        }
+        }*/
     }
     
     //public apis

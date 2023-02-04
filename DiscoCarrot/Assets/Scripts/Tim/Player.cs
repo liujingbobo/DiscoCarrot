@@ -9,7 +9,8 @@ public class Player : MonoBehaviour
 {
     public CharacterController cc;
     public float speed;
-
+    public Vector3 startPosition;
+    
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimationName;
     [SpineAnimation] public string moveAnimationName;
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour
     
     void Start()
     {
+        startPosition = transform.position;
         spineAnimationState = skeletonAnimation.AnimationState;
         skeleton = skeletonAnimation.Skeleton;
         SwitchToAnimState(PlayerAnimName.Idle);
@@ -49,6 +51,7 @@ public class Player : MonoBehaviour
 
     public void ResetPlayer()
     {
+        cc.Move(startPosition - transform.position);
         SwitchToAnimState(PlayerAnimName.Idle);
         transform.localPosition = Vector3.zero;
     }
