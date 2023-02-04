@@ -59,13 +59,12 @@ public class GameManager : MonoBehaviour
         public Image endTextImage;
 
         //Conclusion
-        public Canvas conclusionCanvas;
+        public ConclusionUI conclusionUI;
         public Button againButton;
         public Button homeButton;
         
         //cached runtime values
-        public List<int> harvestedCarrots = new List<int>(4);
-        public int missedCount = 0;
+        public GameRunTimeValues runTimeValues = new GameRunTimeValues();
         
         // Koreographer
         public GameSettings settings;
@@ -73,6 +72,20 @@ public class GameManager : MonoBehaviour
         public Koreographer koreographer;
         public OperationIndicator indicator;
         public FarmingStateMachine stateMachine;
+    }
+
+    public class GameRunTimeValues
+    {
+        public int[] harvestedCarrots = new int[4];
+        public int missedCount = 0;
+        
+
+
+        public GameRunTimeValues()
+        {
+            harvestedCarrots = new int[4];
+            missedCount = 0;
+        }
     }
     
     public enum GameLoopState
@@ -135,6 +148,10 @@ public class GameManager : MonoBehaviour
             {
                 t.ResetFarmTile();
             }
+            
+            stateMachine.sharedContext.runTimeValues = new GameRunTimeValues();
+            stateMachine.sharedContext.conclusionUI.Reset();
+            stateMachine.sharedContext.conclusionUI.gameObject.SetActive(false);
 
             //set text tween
             stateMachine.sharedContext.readyTextImage.transform.localScale = Vector3.zero;
@@ -185,23 +202,14 @@ public class GameManager : MonoBehaviour
             {
                 GameEvents.OnDownBeat.Invoke();
             });            
-            
-            // Koreographer.Instance.RegisterForEvents("UpBeat", _ =>
-            // {
-            //     GameEvents.OnUpBeat.Invoke();
-            // });        
-            
             Koreographer.Instance.RegisterForEvents("End", _ =>
             {
                 SwitchToState(GameLoopState.GameEnd);
             });
             
-            stateMachine.sharedContext.harvestedCarrots = new List<int>(4);
+            // stateMachine.sharedContext.harvestedCarrots = new List<int>(4);
             GameEvents.OnHarvestCarrot += OnHarvestCarrot;
-            
             stateMachine.sharedContext.player.SetPlayerMovable(true);
-            // DOTween.Sequence().AppendInterval(90f)
-            //     .AppendCallback(() => { SwitchToState(GameLoopState.GameEnd); });
         }
         
         public override void ExitState()
@@ -213,7 +221,7 @@ public class GameManager : MonoBehaviour
 
         public void OnHarvestCarrot(CarrotLevel level)
         {
-            stateMachine.sharedContext.harvestedCarrots[(int) level] += 1;
+            stateMachine.sharedContext.runTimeValues.harvestedCarrots[(int) level] += 1;
         }
     }
     public class GameEndState : SimpleStateInstance<GameLoopState, GameManagerContext>
@@ -248,14 +256,14 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(true);
+            stateMachine.sharedContext.conclusionUI.gameObject.SetActive(true);
+            stateMachine.sharedContext.conclusionUI.OpenConclusionUI();
             stateMachine.sharedContext.againButton.onClick.AddListener(OnAgainButtonClick);
             stateMachine.sharedContext.homeButton.onClick.AddListener(OnHomeButtonClick);
         }
         public override void ExitState()
         {
-            stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(false);
-
+            stateMachine.sharedContext.conclusionUI.Reset();
             base.ExitState();
         }
         void OnAgainButtonClick()
