@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class I_Plant : MonoBehaviour, IIndicator
 {
+    public GameObject UI;
     public GameObject target;
     
     public void Init()
     {
         Reset();
+        UI.SetActive(true);
     }
 
-    public void Pass(ArrowState state)
+    public void UpdateState(ArrowState state)
     {
         if (target.GetComponentInChildren<IUIThumbnail<ArrowState>>() is { } tn)
         {
@@ -21,6 +23,8 @@ public class I_Plant : MonoBehaviour, IIndicator
 
     public void Exit()
     {
+        UI.SetActive(false);
+            
     }
 
     public void Reset()

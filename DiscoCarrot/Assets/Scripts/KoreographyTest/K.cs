@@ -17,6 +17,7 @@ public static class K
     public static int SampleRate => koreographer.GetMusicSampleRate();
     public static float SamplePerBeat => G.Settings.SamplesPerBeatForSong[currentClip];
     public static double BeatsPerMinute => koreographer.GetMusicBPM();
+    public static float SamplePerSecond => SamplePerBeat * (float)BeatsPerMinute / 60;
     public static float SampleTimeToTime(int sampleTime)
     {
         var temp = (float) sampleTime / SampleRate;
@@ -44,7 +45,6 @@ public static class K
 
         return validEvents[minDisIndex];
     }
-
     public static KoreographyEvent GetClosestUpBeatEvent()
     {
         int min = CurrentSampleTime - SampleRate;
@@ -88,6 +88,29 @@ public static class K
             keys.Add(KeyCode.LeftArrow);
         }
         return keys;
+    }    
+    
+    public static List<KeyCode> GetAllValidKeyUp()
+    {
+        List<KeyCode> keys = new List<KeyCode>();
+        
+        if (Input.GetKeyUp(KeyCode.UpArrow))
+        {
+            keys.Add(KeyCode.UpArrow);
+        }       
+        if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            keys.Add(KeyCode.RightArrow);
+        }      
+        if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            keys.Add(KeyCode.DownArrow);
+        }       
+        if (Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            keys.Add(KeyCode.LeftArrow);
+        }
+        return keys;
     }
     public static bool HasValidArrowKeyDown()
     {
@@ -98,40 +121,57 @@ public static class K
     public static PressLevel GetCurrentArrowLevel(bool isDownBeat = true)
     {
         var kEvent = isDownBeat ? GetClosestDownBeatEvent() : GetClosestUpBeatEvent();
-        var gap = Math.Abs(kEvent.StartSample - CurrentSampleTime);
-        
-        if (gap > G.GetThreshold(PressLevel.Miss))
+        var gapSample = Math.Abs(kEvent.StartSample - CurrentSampleTime);
+        var gapTime = SampleTimeToTime(gapSample);
+        if (gapTime > G.GetThreshold(PressLevel.Miss))
         {
             return PressLevel.Miss;
         }
         
-        if(gap > G.GetThreshold(PressLevel.Good))
+        if(gapTime > G.GetThreshold(PressLevel.Good))
         {
             return PressLevel.Good;
         }
         
         return PressLevel.Perfect;
     }
-
     public static PressLevel GetArrowLevel(int targetSampleTime)
     {
-        var gap = Math.Abs(targetSampleTime - CurrentSampleTime);
-        
-        if (gap > G.GetThreshold(PressLevel.Miss))
+        var gapSample = Math.Abs(targetSampleTime - CurrentSampleTime);
+        var gapTime = SampleTimeToTime(gapSample);
+
+        if (gapTime > G.GetThreshold(PressLevel.Miss))
         {
             return PressLevel.Miss;
         }
         
-        if(gap > G.GetThreshold(PressLevel.Good))
+        if(gapTime > G.GetThreshold(PressLevel.Good))
         {
             return PressLevel.Good;
         }
         
         return PressLevel.Perfect;
     }
-    
     public static bool GetOnlyKeyDown(KeyCode key)
     {
         return Input.GetKeyDown(key) && GetAllValidKeyDown().Count == 1;
+    }
+
+    public static int GetMaxSampleTime(KoreographyEvent kEvent, float BeatAway)
+    {
+        var temp = G.GetThreshold(PressLevel.Miss) * SamplePerSecond;
+        
+        return (int)(kEvent.EndSample + BeatAway * SamplePerBeat + temp);
+    }
+
+    public static ArrowState ToArrowState(this PressLevel level)
+    {
+        return level switch
+        {
+            PressLevel.Perfect => ArrowState.Perfect,
+            PressLevel.Good => ArrowState.Good,
+            PressLevel.Miss => ArrowState.Miss,
+            _ => ArrowState.Normal
+        };
     }
 }

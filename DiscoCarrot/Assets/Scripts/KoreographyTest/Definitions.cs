@@ -98,7 +98,7 @@ public enum ArrowState
 public interface IIndicator
 {
     void Init();
-    void Pass(ArrowState state);
+    void UpdateState(ArrowState state);
     void Exit();
     void Reset();
 }

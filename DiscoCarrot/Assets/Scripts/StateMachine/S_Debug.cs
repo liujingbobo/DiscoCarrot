@@ -8,20 +8,24 @@ public class S_Debug : MonoBehaviour, IState
 {
     private int phase;
     private bool clockwise;
-    
+    private int MaxSampleTime;
+
     public void Enter()
     {
+        G.Indicator.SwitchTo(PlayerFarmAction.DebugPlant);
         Reset();
     }
 
     public void Exit()
     {
+        Reset();
     }
 
     public void Reset()
     {
         phase = 0;
         clockwise = Random.Range(0, 2) == 1;
+        MaxSampleTime = int.MaxValue;
     }
 
     public void UpdateState()
@@ -36,31 +40,55 @@ public class S_Debug : MonoBehaviour, IState
             (3, false) => KeyCode.RightArrow,
         };
         
-        if (Input.GetKeyDown(targetKey))
+        var allValidKeyDown = K.GetAllValidKeyDown();
+
+        if (allValidKeyDown.Count > 0)
         {
-            var isDownBeat = phase == 0 || phase == 2;
-                
-            var allValidKeyDown = K.GetAllValidKeyDown();
+            if (Input.GetKeyDown(targetKey))
+            {
+                var isDownBeat = phase == 0 || phase == 2;
 
-            var level = K.GetCurrentArrowLevel(isDownBeat);
+                var level = K.GetCurrentArrowLevel(isDownBeat);
 
-            var kEvent = isDownBeat ? K.GetClosestDownBeatEvent() : K.GetClosestUpBeatEvent();
+                var kEvent = isDownBeat ? K.GetClosestDownBeatEvent() : K.GetClosestUpBeatEvent();
             
-            if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
-            {
-                // Failed
-            }
-            else
-            {
-                if (phase == 3)
+                if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
                 {
-                    // success
+                    // Failed
+                    G.StateMachine.Fail();
                 }
                 else
                 {
-                    phase++;
+                    if (phase == 3)
+                    {
+                        // success
+                        G.Indicator.UpdateState(level.ToArrowState());
+                        G.StateMachine.Success(ActionLevel.Perfect);
+                    }
+                    else
+                    {
+                        if (phase == 0)
+                        {
+                            MaxSampleTime = K.GetMaxSampleTime(kEvent, 1.5f);
+                        }
+                    
+                        phase++;
+                        // UpdateState
+                        G.Indicator.UpdateState(level.ToArrowState());
+                    }
                 }
             }
+            else
+            {
+                // Failed
+                G.StateMachine.Fail();
+            }
+        }
+
+        if (phase > 0 && K.CurrentSampleTime > MaxSampleTime)
+        {
+            // Failed
+            G.StateMachine.Fail();
         }
     }
 

@@ -6,10 +6,10 @@ using UnityEngine;
 public class S_Harvest : MonoBehaviour, IState
 {
     private int phase;
-    
+    private int MaxSampleTime;
+    private int expectNext;
     public void Enter()
     {
-        G.Indicator.SwitchTo(PlayerFarmAction.HarvestPlant);
         Reset();
     }
 
@@ -20,6 +20,7 @@ public class S_Harvest : MonoBehaviour, IState
     public void Reset()
     {
         phase = 0;
+        expectNext = 0;
     }
 
     public void UpdateState()
@@ -32,23 +33,27 @@ public class S_Harvest : MonoBehaviour, IState
 
             if (allKeys.Count > 0)
             {
-                if (Input.GetKeyDown(KeyCode.LeftArrow) && allKeys.Count == 1)
+                if (Input.GetKeyDown(KeyCode.UpArrow) && allKeys.Count == 1)
                 {
-                    var level = K.GetCurrentArrowLevel(false);
+                    var level = K.GetCurrentArrowLevel(true);
 
                     if (level == PressLevel.Miss)
                     {
                         // failed
+                        G.StateMachine.Fail();
                     }
                     else
                     {
+                        expectNext = K.GetClosestDownBeatEvent().EndSample + (int) (K.SamplePerBeat * 0.5f);
                         phase++;
                         // Update UI
+                        G.Indicator.UpdateState(ArrowState.Perfect);
                     }
                 }
                 else
                 {
                     // Failed
+                    G.StateMachine.Fail();
                 }
             }
         }
@@ -58,32 +63,44 @@ public class S_Harvest : MonoBehaviour, IState
 
             if (allKeys.Count > 0)
             {
-                if (Input.GetKeyDown(KeyCode.RightArrow) && allKeys.Count == 1)
+                if (Input.GetKeyDown(KeyCode.UpArrow) && allKeys.Count == 1)
                 {
                     var level = K.GetCurrentArrowLevel(false);
 
                     if (level == PressLevel.Miss)
                     {
                         // failed
+                        G.StateMachine.Fail();
                     }
                     else
                     {
                         if (phase == 7)
                         {
                             // success
+                            G.Indicator.UpdateState(level.ToArrowState());
+                            G.StateMachine.Success(ActionLevel.Perfect);
                         }
                         else
                         {
+                            expectNext = K.GetClosestUpBeatEvent().EndSample + (int) (K.SamplePerBeat * 0.5f);
                             phase++;
                             // Update UI
+                            G.Indicator.UpdateState(ArrowState.Perfect);
                         }
                     }
                 }
                 else
                 {
                     // Failed
+                    G.StateMachine.Fail();
                 }
             }
+        }
+        
+        if (phase > 0 && K.CurrentSampleTime > expectNext)
+        {
+            // Failed
+            G.StateMachine.Fail();
         }
     }
 }
