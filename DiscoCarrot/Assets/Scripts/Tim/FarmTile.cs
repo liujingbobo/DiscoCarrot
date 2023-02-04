@@ -35,6 +35,10 @@ public class FarmTile : MonoBehaviour
     public List<GameObject> fullyGrownSpriteGOs; // index represent Carrot Grade
     public List<GameObject> eventFlagSpriteGOs; // index + 1 represent FarmTileEventFlag
 
+    public Transform leftTeleportPoint;
+    public Transform rightTeleportPoint;
+    public Transform upTeleportPoint;
+    
     //exposed values, dont change it
     [Header("Exposed values, dont change it")]
     public FarmTilePlantState currentPlantState;
@@ -259,5 +263,20 @@ public class FarmTile : MonoBehaviour
             case FarmTilePlantState.FullyGrown: return PlayerFarmAction.HarvestPlant;
         }
         return PlayerFarmAction.NoActionNeeded;
+    }
+
+    public Transform GetTeleportPointTransform(PlayerFarmAction farmActionName)
+    {
+        switch (farmActionName)
+        {
+            case PlayerFarmAction.PlowLand: return leftTeleportPoint;
+            case PlayerFarmAction.PlantSeed: return upTeleportPoint;
+            case PlayerFarmAction.WaterPlant: return upTeleportPoint;
+            case PlayerFarmAction.FertilizePlant: return leftTeleportPoint;
+            case PlayerFarmAction.DebugPlant: return rightTeleportPoint;
+            case PlayerFarmAction.HarvestPlant: return upTeleportPoint;
+            default:
+                return null;
+        }
     }
 }

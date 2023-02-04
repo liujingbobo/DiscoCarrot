@@ -38,8 +38,9 @@ public class Tester : MonoBehaviour
         {
             if (targetTile != null)
             {
-                rabbitPlayer.SwitchToAnimState(Config.tmpFarmActionToAnim[targetTile.GetNeededPlayerFarmAction()]);
-                GameEvents.OnFarmActionDone.Invoke(targetTile, targetTile.GetNeededPlayerFarmAction(), ActionLevel.Perfect);
+                var actionName = targetTile.GetNeededPlayerFarmAction();
+                rabbitPlayer.SwitchToAnimState(Config.tmpFarmActionToAnim[actionName], targetTile.GetTeleportPointTransform(actionName));
+                GameEvents.OnFarmActionDone.Invoke(targetTile, actionName, ActionLevel.Perfect);
             }
         }
 

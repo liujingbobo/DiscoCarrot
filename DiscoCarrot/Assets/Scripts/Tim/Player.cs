@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Spine;
 using Spine.Unity;
 using Unity.VisualScripting;
 using UnityEngine;
+using Event = Spine.Event;
 
 public class Player : MonoBehaviour
 {
@@ -37,8 +39,43 @@ public class Player : MonoBehaviour
         startPosition = transform.position;
         spineAnimationState = skeletonAnimation.AnimationState;
         skeleton = skeletonAnimation.Skeleton;
+        skeletonAnimation.AnimationState.Event += HandleAnimationStateEvent;
         SwitchToAnimState(PlayerAnimName.Idle);
         GameEvents.OnOneBeatPassed += OnOneBeatPassed;
+    }
+
+    private void HandleAnimationStateEvent(TrackEntry trackentry, Event e)
+    {
+        //Trigger SFX
+        Debug.Log($"animation event fired: {e}");
+        var eventName = e.Data.Name;
+        switch (eventName)
+        {
+            case "feed": //SoundEffectManager.singleton.PlaySFX();
+                break;
+            case "harvest": SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.harvest);
+                break;
+            case "hoeing": 
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.hoeing);
+                break;
+            case "insecticide": 
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.insecticide);
+                break;
+            case "miss": SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.miss);
+                break;
+            case "move": SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.move);
+                break;
+            case "sowing": 
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.plantSeed);
+                break;
+            case "watering": 
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.water);
+                break;
+        }
     }
 
     private void OnOneBeatPassed()
@@ -115,15 +152,17 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SwitchToAnimState(PlayerAnimName targetAnimName)
+    public void SwitchToAnimState(PlayerAnimName targetAnimName, Transform teleportPoint = null)
     {
         currentAnimState = targetAnimName;
+        if (teleportPoint != null) cc.Move(teleportPoint.position - transform.position);
         PlayAnim(targetAnimName);
     }
 
     private void PlayAnim(PlayerAnimName animName)
     {
         failSaveBeatCount = 1;
+        skeleton.ScaleX = 1;
         switch (animName)
         {
             case PlayerAnimName.Idle:

@@ -139,9 +139,11 @@ public class GameManager : MonoBehaviour
             var goOutTweener = stateMachine.sharedContext.goTextImage.DOFade(0, 0.5f);
             var sequence = DOTween.Sequence();
             sequence.AppendInterval(1f)
+                .AppendCallback(()=>{SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.ready);})
                 .Append(readyInTweener)
                 .Append(readyOutTweener)
                 .AppendInterval(1f)
+                .AppendCallback(()=>{SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.go);})
                 .Append(goInTweener)
                 .Append(goOutTweener)
                 .AppendCallback(() => { SwitchToState(GameLoopState.GameRunning); });
@@ -160,7 +162,7 @@ public class GameManager : MonoBehaviour
         {
             base.EnterState();
             stateMachine.sharedContext.player.SetPlayerMovable(true);
-            DOTween.Sequence().AppendInterval(2f)
+            DOTween.Sequence().AppendInterval(90f)
                 .AppendCallback(() => { SwitchToState(GameLoopState.GameEnd); });
         }
         
