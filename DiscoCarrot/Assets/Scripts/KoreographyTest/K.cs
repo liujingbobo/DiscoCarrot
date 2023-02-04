@@ -95,39 +95,39 @@ public static class K
                Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow);
     }
     // pre requisite: Assume current input is valid
-    public static ArrowLevel GetCurrentArrowLevel(bool isDownBeat = true)
+    public static PressLevel GetCurrentArrowLevel(bool isDownBeat = true)
     {
         var kEvent = isDownBeat ? GetClosestDownBeatEvent() : GetClosestUpBeatEvent();
         var gap = Math.Abs(kEvent.StartSample - CurrentSampleTime);
         
-        if (gap > G.GetThreshold(ArrowLevel.Miss))
+        if (gap > G.GetThreshold(PressLevel.Miss))
         {
-            return ArrowLevel.Miss;
+            return PressLevel.Miss;
         }
         
-        if(gap > G.GetThreshold(ArrowLevel.Good))
+        if(gap > G.GetThreshold(PressLevel.Good))
         {
-            return ArrowLevel.Good;
+            return PressLevel.Good;
         }
         
-        return ArrowLevel.Perfect;
+        return PressLevel.Perfect;
     }
 
-    public static ArrowLevel GetArrowLevel(int targetSampleTime)
+    public static PressLevel GetArrowLevel(int targetSampleTime)
     {
         var gap = Math.Abs(targetSampleTime - CurrentSampleTime);
         
-        if (gap > G.GetThreshold(ArrowLevel.Miss))
+        if (gap > G.GetThreshold(PressLevel.Miss))
         {
-            return ArrowLevel.Miss;
+            return PressLevel.Miss;
         }
         
-        if(gap > G.GetThreshold(ArrowLevel.Good))
+        if(gap > G.GetThreshold(PressLevel.Good))
         {
-            return ArrowLevel.Good;
+            return PressLevel.Good;
         }
         
-        return ArrowLevel.Perfect;
+        return PressLevel.Perfect;
     }
     
     public static bool GetOnlyKeyDown(KeyCode key)

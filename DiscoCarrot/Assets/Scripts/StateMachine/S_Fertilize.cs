@@ -34,7 +34,7 @@ public class S_Fertilize : MonoBehaviour, IState
             
             var kEvent = K.GetClosestDownBeatEvent();
             
-            if (allValidKeyDown.Count > 1 || level == ArrowLevel.Miss)
+            if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
             {
                 // Failed
             }
@@ -52,7 +52,7 @@ public class S_Fertilize : MonoBehaviour, IState
             
             var level = K.GetArrowLevel(expectedSampleTime);
             
-            if (allValidKeyDown.Count > 1 || level == ArrowLevel.Miss)
+            if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
             {
                 // Failed
             }

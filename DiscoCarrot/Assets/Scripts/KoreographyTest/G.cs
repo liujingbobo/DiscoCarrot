@@ -6,7 +6,7 @@ public static class G
 {
     public static GameSettings Settings;
     public static OperationIndicator Indicator;
-    public static float GetThreshold(ArrowLevel level)
+    public static float GetThreshold(PressLevel level)
     {
         return Settings.ArrowLevelThreshold[level];
     }

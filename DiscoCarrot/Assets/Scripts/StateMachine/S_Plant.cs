@@ -32,7 +32,7 @@ public class S_Plant : MonoBehaviour, IState
             {
                 var level = K.GetCurrentArrowLevel();
             
-                if ( level == ArrowLevel.Miss)
+                if ( level == PressLevel.Miss)
                 {
                     // Failed
                 }

@@ -17,7 +17,7 @@ public enum CarrotLevel
     Bad
 }
 
-public enum ArrowLevel
+public enum PressLevel
 {
     Perfect,
     Good,
@@ -72,7 +72,16 @@ public interface IUIThumbnail<T>
 
 public enum ArrowState
 {
-    
+    Normal,
+    Miss,
+    Good,
+    Perfect
 }
 
-
+public interface IIndicator
+{
+    void Init();
+    void Pass(ArrowState state);
+    void Exit();
+    void Reset();
+}

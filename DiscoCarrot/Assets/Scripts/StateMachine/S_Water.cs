@@ -33,7 +33,7 @@ public class S_Water : MonoBehaviour, IState
 
             var kEvent = K.GetClosestDownBeatEvent();
             
-            if (allValidKeyDown.Count > 1 || level == ArrowLevel.Miss)
+            if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
             {
                 // Failed
             }
@@ -50,7 +50,7 @@ public class S_Water : MonoBehaviour, IState
         {
             var level = K.GetArrowLevel(ExpectFinalSampleTime);
 
-            if (level == ArrowLevel.Miss)
+            if (level == PressLevel.Miss)
             {
                 // Failed
             }

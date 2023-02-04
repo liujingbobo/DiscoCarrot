@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 public class S_Debug : MonoBehaviour, IState
 {
     private int phase;
-    private int expectedSampleTime;
     private bool clockwise;
     
     public void Enter()
@@ -22,7 +21,6 @@ public class S_Debug : MonoBehaviour, IState
     public void Reset()
     {
         phase = 0;
-        expectedSampleTime = 0;
         clockwise = Random.Range(0, 2) == 1;
     }
 
@@ -48,7 +46,7 @@ public class S_Debug : MonoBehaviour, IState
 
             var kEvent = isDownBeat ? K.GetClosestDownBeatEvent() : K.GetClosestUpBeatEvent();
             
-            if (allValidKeyDown.Count > 1 || level == ArrowLevel.Miss)
+            if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
             {
                 // Failed
             }
@@ -61,7 +59,6 @@ public class S_Debug : MonoBehaviour, IState
                 else
                 {
                     phase++;
-                    expectedSampleTime = kEvent.EndSample + ((int)K.SamplePerBeat / 2);
                 }
             }
         }

@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class OperationIndicator : MonoBehaviour
+public class OperationIndicator : SerializedMonoBehaviour
 {
-    [SerializeField] private Dictionary<PlayerFarmAction, IState> dic;
+    [SerializeField] private Dictionary<PlayerFarmAction, IIndicator> dic;
     private PlayerFarmAction curAction = PlayerFarmAction.NoActionNeeded;
+    
+    
     public void SwitchTo(PlayerFarmAction action)
     {
         if (curAction != PlayerFarmAction.NoActionNeeded && action != curAction)
@@ -14,8 +17,7 @@ public class OperationIndicator : MonoBehaviour
         }
 
         curAction = action;
-        
-        dic[action].Enter();
+        dic[action].Init();
     }
 
     public void Refresh()

@@ -36,7 +36,7 @@ public class S_Harvest : MonoBehaviour, IState
                 {
                     var level = K.GetCurrentArrowLevel(false);
 
-                    if (level == ArrowLevel.Miss)
+                    if (level == PressLevel.Miss)
                     {
                         // failed
                     }
@@ -62,7 +62,7 @@ public class S_Harvest : MonoBehaviour, IState
                 {
                     var level = K.GetCurrentArrowLevel(false);
 
-                    if (level == ArrowLevel.Miss)
+                    if (level == PressLevel.Miss)
                     {
                         // failed
                     }
