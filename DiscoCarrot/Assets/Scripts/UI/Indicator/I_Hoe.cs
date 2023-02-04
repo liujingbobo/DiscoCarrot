@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class I_Hoe : MonoBehaviour, IIndicator
 {
+    public GameObject UI;
     private bool firstPassed;
     public GameObject firstArrow;
     public GameObject secondArrow;
     public void Init()
     {
         Reset();
+        UI.SetActive(true);
     }
 
-    public void Pass(ArrowState state)
+    public void UpdateState(ArrowState state)
     {
         if (state == ArrowState.Miss)
         {
-            if (secondArrow.GetComponent<IUIThumbnail<ArrowState>>() is { } sTN)
+            if (secondArrow.GetComponentInChildren<IUIThumbnail<ArrowState>>() is { } sTN)
             {
                 sTN.FillWith(state);
             }    
             if (!firstPassed)
             {
-                if (firstArrow.GetComponent<IUIThumbnail<ArrowState>>() is { } fTN)
+                if (firstArrow.GetComponentInChildren<IUIThumbnail<ArrowState>>() is { } fTN)
                 {
                     fTN.FillWith(state);
                 } 
@@ -32,22 +34,25 @@ public class I_Hoe : MonoBehaviour, IIndicator
         {
             if (firstPassed)
             {
-                if (secondArrow.GetComponent<IUIThumbnail<ArrowState>>() is { } s)
+                if (secondArrow.GetComponentInChildren<IUIThumbnail<ArrowState>>() is { } s)
                 {
                     s.FillWith(state);
                 }   
             }
             else
             {
-                if (firstArrow.GetComponent<IUIThumbnail<ArrowState>>() is { } s)
+                if (firstArrow.GetComponentInChildren<IUIThumbnail<ArrowState>>() is { } s)
                 {
                     s.FillWith(state);
-                }       
+                }
+
+                firstPassed = true;
             }
         }
     }
     public void Exit()
-    {
+    {        UI.SetActive(false);
+
     }
     public void Reset()
     {

@@ -20,10 +20,6 @@ public class S_Plant : MonoBehaviour, IState
 
     public void UpdateState()
     {
-    }
-
-    private void Update()
-    {
         var allValidKeyDown = K.GetAllValidKeyDown();
 
         if (allValidKeyDown.Count > 0)
@@ -35,16 +31,20 @@ public class S_Plant : MonoBehaviour, IState
                 if ( level == PressLevel.Miss)
                 {
                     // Failed
+                    G.StateMachine.Fail();
                 }
                 else
                 {
+                    // Success
                     // GameEvents.OnFarmActionDone.Invoke();
+                    G.Indicator.UpdateState(ArrowState.Perfect);
+                    G.StateMachine.Success(ActionLevel.Perfect);
                 }
             }else
             {
                 // Failed
+                G.StateMachine.Fail();
             }
         }
-
     }
 }

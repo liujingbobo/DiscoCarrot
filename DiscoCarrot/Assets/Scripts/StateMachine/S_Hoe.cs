@@ -11,12 +11,11 @@ public class S_Hoe : MonoBehaviour, IState
     
     public void Enter()
     {
-        G.Indicator.SwitchTo(PlayerFarmAction.PlowLand);
+        Reset();
     }
 
     public void Exit()
     {
-        
     }
 
     public void Reset()
@@ -29,40 +28,57 @@ public class S_Hoe : MonoBehaviour, IState
     {
         var allValidKeyDown = K.GetAllValidKeyDown();
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (allValidKeyDown.Count > 0)
         {
-            var level = K.GetCurrentArrowLevel();
-            
-            if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
-            {
-                // Failed
-            }
-            else
-            {
-                // GameEvents.OnFarmActionDone.Invoke();
-            }
-        }
-
-        if (downPressed)
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (!downPressed)
             {
                 var level = K.GetCurrentArrowLevel();
-
-                if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
+            
+                if (!Input.GetKeyDown(KeyCode.UpArrow) || allValidKeyDown.Count > 1 || level == PressLevel.Miss)
                 {
                     // Failed
+                    G.StateMachine.Fail();
                 }
                 else
                 {
-                    
+                    // UpdateState
+                    // GameEvents.OnFarmActionDone.Invoke();
+                    print("1 state success");
+                    downPressed = true;
+                    G.Indicator.UpdateState(ArrowState.Perfect);
+                    MaxSampleTime = K.GetMaxSampleTime(K.GetClosestDownBeatEvent(), 1);
+                }
+            }else if (downPressed)
+            {
+                if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    var level = K.GetCurrentArrowLevel();
+
+                    if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
+                    {
+                        // Failed
+                        G.StateMachine.Fail();
+                    }
+                    else
+                    {
+                        // Success
+                        G.Indicator.UpdateState(ArrowState.Perfect);
+                        G.StateMachine.Success(ActionLevel.Perfect);
+                    }
+                }
+                else
+                {
+                    // Failed
+                    G.StateMachine.Fail();
                 }
             }
         }
 
-        if (K.CurrentSampleTime > MaxSampleTime)
+
+        if (downPressed && K.CurrentSampleTime > MaxSampleTime)
         {
             // Failed
+            G.StateMachine.Fail();
         }
     }
 }

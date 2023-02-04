@@ -15,13 +15,10 @@ public class I_Debug : MonoBehaviour, IIndicator
     public void Init()
     {
         Reset();
-
     }
 
-    public void Pass(ArrowState state)
+    public void UpdateState(ArrowState state)
     {
-        var ui = GameEvents.isClockWise ? clockwiseUI : counterClockwiseUI;
-        
         List<GameObject> arrows = GameEvents.isClockWise ? clockwiseArrows : counterClockwiseArrows;
         
         if (state == ArrowState.Miss)
@@ -38,14 +35,17 @@ public class I_Debug : MonoBehaviour, IIndicator
         {
             if (arrows[process].GetComponentInChildren<IUIThumbnail<ArrowState>>() is { } tn)
             {
-                tn.FillWith(ArrowState.Miss);
+                tn.FillWith(state);
             }
+            
             if (process + 1 != arrows.Count) process++;
         }
     }
 
     public void Exit()
     {
+        var ui = GameEvents.isClockWise ? clockwiseUI : counterClockwiseUI;
+        ui.SetActive(false);
     }
 
     public void Reset()

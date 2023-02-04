@@ -5,15 +5,17 @@ using UnityEngine;
 
 public class I_Harvest : SerializedMonoBehaviour, IIndicator
 {
+    public GameObject UI;
     public List<IUIThumbnail<ArrowState>> arrows;
     public int process;
     
     public void Init()
     {
         Reset();
+        UI.SetActive(true);
     }
 
-    public void Pass(ArrowState state)
+    public void UpdateState(ArrowState state)
     {
         if (state == ArrowState.Miss)
         {
@@ -31,6 +33,7 @@ public class I_Harvest : SerializedMonoBehaviour, IIndicator
 
     public void Exit()
     {
+        UI.SetActive(false);
     }
 
     public void Reset()

@@ -7,8 +7,6 @@ public class OperationIndicator : SerializedMonoBehaviour
 {
     [SerializeField] private Dictionary<PlayerFarmAction, IIndicator> dic;
     private PlayerFarmAction curAction = PlayerFarmAction.NoActionNeeded;
-    
-    
     public void SwitchTo(PlayerFarmAction action)
     {
         if (curAction != PlayerFarmAction.NoActionNeeded && action != curAction)
@@ -19,12 +17,18 @@ public class OperationIndicator : SerializedMonoBehaviour
         curAction = action;
         dic[action].Init();
     }
-
-    public void Refresh()
+    public void Reset()
     {
         if (curAction != PlayerFarmAction.NoActionNeeded)
         {
             dic[curAction].Reset();
+        }
+    }
+    public void UpdateState(ArrowState state)
+    {
+        if (curAction != PlayerFarmAction.NoActionNeeded)
+        {
+            dic[curAction].UpdateState(state);
         }
     }
 }
