@@ -26,14 +26,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4924886462745538634}
-  m_LocalRotation: {x: 0.30720577, y: -0.00013354827, z: 0.000043111537, w: 0.9516431}
-  m_LocalPosition: {x: 0, y: 25.69, z: -42.53}
+  m_LocalRotation: {x: 0.37668264, y: 0, z: 0, w: 0.92634237}
+  m_LocalPosition: {x: 0, y: 19.4, z: -19.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 45, y: -0.05, z: 0}
+  m_LocalEulerAnglesHint: {x: 10, y: -11.783, z: 0}
 --- !u!20 &4924886462745538632
 Camera:
   m_ObjectHideFlags: 0
@@ -59,7 +59,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 35
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -100,5 +100,5 @@ MonoBehaviour:
   camera: {fileID: 4924886462745538632}
   target: {fileID: 0}
   setDistance: 0
-  distance: {x: 0, y: 5, z: -5}
+  distance: {x: 0, y: 0, z: 0}
   aimOffset: {x: 0, y: 0, z: 0}
