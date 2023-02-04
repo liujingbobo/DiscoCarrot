@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using SonicBloom.Koreo;
 using UnityEngine;
 
 public class FarmingStateMachine : SerializedMonoBehaviour
@@ -12,12 +13,12 @@ public class FarmingStateMachine : SerializedMonoBehaviour
     private bool finished = true;
     private void Awake()
     {
-        // GameEvents.OnReachedFarmTile += (tile, action) =>
-        // {
-        //     GameEvents.currentTile = tile;
-        //     curAction = action;
-        //     SwitchTo(action);
-        // };
+        GameEvents.OnReachedFarmTile += (tile, action) =>
+        {
+            GameEvents.currentTile = tile;
+            curAction = action;
+            SwitchTo(action);
+        };
         active = false;
         finished = true;
     }
@@ -69,19 +70,39 @@ public class FarmingStateMachine : SerializedMonoBehaviour
     {
         G.Indicator.UpdateState(ArrowState.Miss);
         active = false;
-        StartCoroutine(TempGap());
+        StartCoroutine(FailCor());
+        // switch fail anim
+        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Sad);
+        // ---
+        // switch to idle
+        
     }
 
     public void Success(ActionLevel level)
     {
         active = false;
-        StartCoroutine(TempGap());
+        StartCoroutine(SuccessCor());
     }
 
-    IEnumerator TempGap()
+    IEnumerator FailCor()
     {
+        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Sad);
         finished = false;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(K.SamplePerBeat * K.SamplePerSecond);
+        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Idle);
+        finished = true;
+        Reset();
+    }  
+    
+    IEnumerator SuccessCor()
+    {
+        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Sad);
+        finished = false;
+        yield return new WaitForSeconds(K.SamplePerBeat * K.SamplePerSecond);
+        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Idle);
+        
+        // TODO: 
+        GameEvents.OnFarmActionDone.Invoke(GameEvents.currentTile, curAction, ActionLevel.Perfect);
         finished = true;
         Reset();
     }

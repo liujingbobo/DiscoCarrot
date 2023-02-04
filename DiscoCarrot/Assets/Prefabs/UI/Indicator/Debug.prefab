@@ -70,6 +70,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 728457538541726297}
     m_Modifications:
+    - target: {fileID: 4776269771897365996, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: aa487f5ce41632e459fd3ee7d01b34ce, type: 3}
     - target: {fileID: 5632395545745829128, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -1029,6 +1033,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3007864895866911288}
     m_Modifications:
+    - target: {fileID: 4776269771897365996, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: aa487f5ce41632e459fd3ee7d01b34ce, type: 3}
     - target: {fileID: 5632395545745829128, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -1241,6 +1249,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 728457538541726297}
     m_Modifications:
+    - target: {fileID: 4776269771897365996, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: aa487f5ce41632e459fd3ee7d01b34ce, type: 3}
     - target: {fileID: 5632395545745829128, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -1554,6 +1566,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3007864895866911288}
     m_Modifications:
+    - target: {fileID: 4776269771897365996, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: aa487f5ce41632e459fd3ee7d01b34ce, type: 3}
     - target: {fileID: 5632395545745829128, guid: 63ef40a0c23cb534dbcfb0c1c5cb986b, type: 3}
       propertyPath: serializationData.Prefab
       value: 

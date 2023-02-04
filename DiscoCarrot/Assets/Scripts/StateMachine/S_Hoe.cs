@@ -8,6 +8,7 @@ public class S_Hoe : MonoBehaviour, IState
 {
     private bool downPressed = false;
     private int MaxSampleTime;
+    private int ExpectSample;
     
     public void Enter()
     {
@@ -22,6 +23,7 @@ public class S_Hoe : MonoBehaviour, IState
     {
         downPressed = false;
         MaxSampleTime = 0;
+        ExpectSample = 0;
     }
 
     public void UpdateState()
@@ -47,12 +49,13 @@ public class S_Hoe : MonoBehaviour, IState
                     downPressed = true;
                     G.Indicator.UpdateState(ArrowState.Perfect);
                     MaxSampleTime = K.GetMaxSampleTime(K.GetClosestDownBeatEvent(), 1);
+                    ExpectSample =(int) (K.GetClosestDownBeatEvent().EndSample + K.SamplePerBeat * 1);
                 }
             }else if (downPressed)
             {
                 if (Input.GetKeyDown(KeyCode.DownArrow))
                 {
-                    var level = K.GetCurrentArrowLevel();
+                    var level = K.GetArrowLevel(ExpectSample);
 
                     if (allValidKeyDown.Count > 1 || level == PressLevel.Miss)
                     {

@@ -18,6 +18,7 @@ public class GameEvents : MonoBehaviour
     public static FarmTile currentTile;
 
     public static Action<CarrotLevel> OnHarvestCarrot;
+    
     // ULTIMATE HARDCODE
     public static bool isClockWise; // for debug UI, don't worry abt it
 }
