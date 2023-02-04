@@ -7,11 +7,23 @@ using UnityEngine;
 public class SoundEffectManager : MonoBehaviour
 {
     public static SoundEffectManager singleton;
+    public float soundVolume = 1;
     public List<AudioClip> audioClipList;
     
     public enum SoundEffectName
     {
-        
+        fail,
+        go,
+        harvest,
+        hoeing,
+        insecticide,
+        miss,
+        move,
+        plantSeed,
+        playerHoar,
+        ready,
+        success,
+        water,
     }
 
     public Dictionary<SoundEffectName, AudioSource> sfxToAudioSources = new Dictionary<SoundEffectName, AudioSource>();
@@ -30,6 +42,7 @@ public class SoundEffectManager : MonoBehaviour
         }
         var sfx = sfxToAudioSources[sfxName];
         sfx.clip = audioClipList[(int) sfxName];
+        sfx.volume = soundVolume;
         sfx.Play();
     }
 }

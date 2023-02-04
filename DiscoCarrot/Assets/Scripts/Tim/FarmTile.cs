@@ -33,8 +33,11 @@ public class FarmTile : MonoBehaviour
     public GameObject seededSpriteGO;
     public GameObject sproutedSpriteGO;
     public List<GameObject> fullyGrownSpriteGOs; // index represent Carrot Grade
-    public List<GameObject> eventFlagSpriteGOs; // index + 1 represent FarmTileEventFlag
 
+    public Transform leftTeleportPoint;
+    public Transform rightTeleportPoint;
+    public Transform upTeleportPoint;
+    
     //exposed values, dont change it
     [Header("Exposed values, dont change it")]
     public FarmTilePlantState currentPlantState;
@@ -46,6 +49,7 @@ public class FarmTile : MonoBehaviour
     public Dictionary<int, FarmTileEventFlag> BeatsToTriggerEvent = new Dictionary<int, FarmTileEventFlag>();
 
     public CarrotLevel fullyGrownCarrotLevel = CarrotLevel.Bad;
+    public int totalPlantScore = 0;
     
     private void Start()
     {
@@ -54,7 +58,7 @@ public class FarmTile : MonoBehaviour
         GameEvents.OnFarmActionDone += OnFarmActionDone;
     }
 
-    private void OnFarmActionDone(FarmTile targetTile, PlayerFarmAction action, ActionLevel score)
+    private void OnFarmActionDone(FarmTile targetTile, PlayerFarmAction action, ActionLevel level)
     {
         if (targetTile != this) return;
         switch (action)
@@ -75,41 +79,41 @@ public class FarmTile : MonoBehaviour
                 SetFarmTileEvent(FarmTileEventFlag.NoEvent);
                 break;
             case PlayerFarmAction.HarvestPlant:
+                //signal harvesting a carrot 
+                if(GameEvents.OnHarvestCarrot != null) GameEvents.OnHarvestCarrot.Invoke(fullyGrownCarrotLevel);
                 ResetFarmTile();
                 break;
         }
         
+        //add score
+        totalPlantScore += Config.GetScoreByActionLevel(level);
+
     }
 
     private void SwitchPlantState(FarmTilePlantState state)
     {
         switch (state)
         {
-                case FarmTilePlantState.Empty:
-                    currentPlantState = FarmTilePlantState.Empty;
-                    break;
-                case FarmTilePlantState.Plowed:
-                    currentPlantState = FarmTilePlantState.Plowed;
-                    break;
-                case FarmTilePlantState.Seeded:
-                    beatCountSinceSeeded = 0;
-                    currentPlantState = FarmTilePlantState.Seeded;
-                    break;
-                case FarmTilePlantState.Sprouted:
-                    currentPlantState = FarmTilePlantState.Sprouted;
-                    break;
-                case FarmTilePlantState.FullyGrown:
-                    //pick grown type
-                    fullyGrownCarrotLevel = CalculateFinalCarrotLevel();
-                    currentPlantState = FarmTilePlantState.FullyGrown;
-                    break;
+            case FarmTilePlantState.Empty:
+                currentPlantState = FarmTilePlantState.Empty;
+                break;
+            case FarmTilePlantState.Plowed:
+                currentPlantState = FarmTilePlantState.Plowed;
+                break;
+            case FarmTilePlantState.Seeded:
+                beatCountSinceSeeded = 0;
+                currentPlantState = FarmTilePlantState.Seeded;
+                break;
+            case FarmTilePlantState.Sprouted:
+                currentPlantState = FarmTilePlantState.Sprouted;
+                break;
+            case FarmTilePlantState.FullyGrown:
+                //pick grown type
+                fullyGrownCarrotLevel = Config.GetCarrotLevelByTotalScore(totalPlantScore);
+                currentPlantState = FarmTilePlantState.FullyGrown;
+                break;
         }
         UpdatePlantSpriteGO(state);
-    }
-    
-    public CarrotLevel CalculateFinalCarrotLevel()
-    {
-        return CarrotLevel.Bad;
     }
     
     private void UpdatePlantSpriteGO(FarmTilePlantState state)
@@ -149,19 +153,12 @@ public class FarmTile : MonoBehaviour
                 if (currentEventFlag == FarmTileEventFlag.NoEvent) return;
                 //close pop up
                 popUp.ClosePopUp();
-                //stop all sprite GO
-                foreach (var g in eventFlagSpriteGOs)
-                {
-                    g.SetActive(false);
-                }
                 break;
             case FarmTileEventFlag.NeedWater:
             case FarmTileEventFlag.NeedFertilize:
             case FarmTileEventFlag.NeedDebug:
                 //TODO: trigger pop up here
                 popUp.StartPopUp(targetFlag, eventResponseTime);
-                //show sprite GO
-                eventFlagSpriteGOs[(int) targetFlag - 1].SetActive(true);
                 break;
         }
         currentEventFlag = targetFlag;
@@ -196,7 +193,7 @@ public class FarmTile : MonoBehaviour
     {
         SwitchPlantState(FarmTilePlantState.Empty);
         beatCountSinceSeeded = 0;
-        
+        totalPlantScore = 0;
         BeatsToTriggerEvent.Clear();
         popUp.Reset();
         turnToSproutedOnBeat = 0;
@@ -259,5 +256,20 @@ public class FarmTile : MonoBehaviour
             case FarmTilePlantState.FullyGrown: return PlayerFarmAction.HarvestPlant;
         }
         return PlayerFarmAction.NoActionNeeded;
+    }
+
+    public Transform GetTeleportPointTransform(PlayerFarmAction farmActionName)
+    {
+        switch (farmActionName)
+        {
+            case PlayerFarmAction.PlowLand: return leftTeleportPoint;
+            case PlayerFarmAction.PlantSeed: return upTeleportPoint;
+            case PlayerFarmAction.WaterPlant: return upTeleportPoint;
+            case PlayerFarmAction.FertilizePlant: return leftTeleportPoint;
+            case PlayerFarmAction.DebugPlant: return rightTeleportPoint;
+            case PlayerFarmAction.HarvestPlant: return upTeleportPoint;
+            default:
+                return null;
+        }
     }
 }
