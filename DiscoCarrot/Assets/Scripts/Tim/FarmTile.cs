@@ -33,7 +33,6 @@ public class FarmTile : MonoBehaviour
     public GameObject seededSpriteGO;
     public GameObject sproutedSpriteGO;
     public List<GameObject> fullyGrownSpriteGOs; // index represent Carrot Grade
-    public List<GameObject> eventFlagSpriteGOs; // index + 1 represent FarmTileEventFlag
 
     public Transform leftTeleportPoint;
     public Transform rightTeleportPoint;
@@ -154,19 +153,12 @@ public class FarmTile : MonoBehaviour
                 if (currentEventFlag == FarmTileEventFlag.NoEvent) return;
                 //close pop up
                 popUp.ClosePopUp();
-                //stop all sprite GO
-                foreach (var g in eventFlagSpriteGOs)
-                {
-                    g.SetActive(false);
-                }
                 break;
             case FarmTileEventFlag.NeedWater:
             case FarmTileEventFlag.NeedFertilize:
             case FarmTileEventFlag.NeedDebug:
                 //TODO: trigger pop up here
                 popUp.StartPopUp(targetFlag, eventResponseTime);
-                //show sprite GO
-                eventFlagSpriteGOs[(int) targetFlag - 1].SetActive(true);
                 break;
         }
         currentEventFlag = targetFlag;
