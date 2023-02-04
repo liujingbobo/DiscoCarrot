@@ -48,6 +48,14 @@ public class GameManager : MonoBehaviour
         public Image readyTextImage;
         public Image goTextImage;
 
+        //GameEnd
+        public Image endTextImage;
+
+        //Conclusion
+        public Canvas conclusionCanvas;
+        public Button againButton;
+        public Button homeButton;
+        
     }
     
     public enum GameLoopState
@@ -145,6 +153,7 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
+            stateMachine.sharedContext.player.SetPlayerMovable(true);
             DOTween.Sequence().AppendInterval(2f)
                 .AppendCallback(() => { SwitchToState(GameLoopState.GameEnd); });
         }
@@ -152,6 +161,7 @@ public class GameManager : MonoBehaviour
         public override void ExitState()
         {
             base.ExitState();
+            stateMachine.sharedContext.player.SetPlayerMovable(false);
         }
     }
     public class GameEndState : SimpleStateInstance<GameLoopState, GameManagerContext>
@@ -159,12 +169,22 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
-            DOTween.Sequence().AppendInterval(2f)
+            //set text tween
+            stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
+            stateMachine.sharedContext.endTextImage.color = Color.white;
+            
+            var endInTweener = stateMachine.sharedContext.endTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+            var endOutTweener = stateMachine.sharedContext.endTextImage.DOFade(0, 0.5f);
+            DOTween.Sequence()
+                .Append(endInTweener)
+                .Append(endOutTweener)
+                .AppendInterval(1f)
                 .AppendCallback(() => { SwitchToState(GameLoopState.Conclusion); });
         }
         
         public override void ExitState()
         {
+            stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
             base.ExitState();
         }
     }
@@ -174,13 +194,23 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
-            DOTween.Sequence().AppendInterval(2f)
-                .AppendCallback(() => { SwitchToState(GameLoopState.Logo); });
+            stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(true);
+            stateMachine.sharedContext.againButton.onClick.AddListener(OnAgainButtonClick);
+            stateMachine.sharedContext.homeButton.onClick.AddListener(OnHomeButtonClick);
         }
-        
         public override void ExitState()
         {
+            stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(false);
+
             base.ExitState();
+        }
+        void OnAgainButtonClick()
+        {
+            SwitchToState(GameLoopState.GameReadyStart);
+        }
+        void OnHomeButtonClick()
+        {
+            SwitchToState(GameLoopState.Logo);
         }
     }
 }
