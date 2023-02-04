@@ -18,8 +18,14 @@ public class Tester : MonoBehaviour
         
         GameEvents.OnReachedFarmTile += OnReachedFarmTile;
         GameEvents.OnLeaveFarmTile += OnLeaveFarmTile;
+        GameEvents.OnHarvestCarrot += OnHarvestCarrot;
     }
-    
+
+    private void OnHarvestCarrot(CarrotLevel obj)
+    {
+        Debug.Log($"Harvested {obj}");
+    }
+
     private void OnReachedFarmTile(FarmTile arg1, PlayerFarmAction arg2)
     {
         targetTile = arg1;
@@ -39,6 +45,7 @@ public class Tester : MonoBehaviour
             if (targetTile != null)
             {
                 var actionName = targetTile.GetNeededPlayerFarmAction();
+                if(actionName == PlayerFarmAction.NoActionNeeded) return;
                 rabbitPlayer.SwitchToAnimState(Config.tmpFarmActionToAnim[actionName], targetTile.GetTeleportPointTransform(actionName));
                 GameEvents.OnFarmActionDone.Invoke(targetTile, actionName, ActionLevel.Perfect);
             }
@@ -52,7 +59,8 @@ public class Tester : MonoBehaviour
         while (true)
         {
             beatCountFromStart += 1;
-            if(GameEvents.OnOneBeatPassed != null) GameEvents.OnOneBeatPassed.Invoke();
+            if(GameEvents.OnOneBeatPassed != null) {GameEvents.OnOneBeatPassed.Invoke();}
+            if(GameEvents.OnDownBeat != null) {GameEvents.OnDownBeat.Invoke();}
             yield return new WaitForSeconds(  60f / bpm);
         }
     }

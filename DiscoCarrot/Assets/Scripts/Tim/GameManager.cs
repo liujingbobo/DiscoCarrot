@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     
     
     [Serializable]
-    public struct GameManagerContext
+    public class GameManagerContext
     {
         //general references
         public Player player;
@@ -62,6 +62,11 @@ public class GameManager : MonoBehaviour
         public Button againButton;
         public Button homeButton;
         
+        
+        
+        //cached runtime values
+        public List<int> harvestedCarrots = new List<int>(4);
+        public int totalHarvestScore = 0;
     }
     
     public enum GameLoopState
@@ -161,6 +166,9 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
+            stateMachine.sharedContext.harvestedCarrots = new List<int>(4);
+            GameEvents.OnHarvestCarrot += OnHarvestCarrot;
+            
             stateMachine.sharedContext.player.SetPlayerMovable(true);
             DOTween.Sequence().AppendInterval(90f)
                 .AppendCallback(() => { SwitchToState(GameLoopState.GameEnd); });
@@ -169,7 +177,13 @@ public class GameManager : MonoBehaviour
         public override void ExitState()
         {
             base.ExitState();
+            GameEvents.OnHarvestCarrot -= OnHarvestCarrot;
             stateMachine.sharedContext.player.SetPlayerMovable(false);
+        }
+
+        public void OnHarvestCarrot(CarrotLevel level)
+        {
+            stateMachine.sharedContext.harvestedCarrots[(int) level] += 1;
         }
     }
     public class GameEndState : SimpleStateInstance<GameLoopState, GameManagerContext>
@@ -205,6 +219,15 @@ public class GameManager : MonoBehaviour
             stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(true);
             stateMachine.sharedContext.againButton.onClick.AddListener(OnAgainButtonClick);
             stateMachine.sharedContext.homeButton.onClick.AddListener(OnHomeButtonClick);
+            
+            //calculate Harvested Carrot Score
+            var totalScore = 0;
+            for (int level = 0; level < stateMachine.sharedContext.harvestedCarrots.Count; level++)
+            {
+                var carrotLevel = (CarrotLevel) level;
+                var carrotCount = stateMachine.sharedContext.harvestedCarrots[level];
+                stateMachine.sharedContext.totalHarvestScore += (carrotCount * Config.GetScoreByCarrotLevel(carrotLevel));
+            }
         }
         public override void ExitState()
         {

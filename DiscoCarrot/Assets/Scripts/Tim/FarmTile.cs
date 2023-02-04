@@ -50,6 +50,7 @@ public class FarmTile : MonoBehaviour
     public Dictionary<int, FarmTileEventFlag> BeatsToTriggerEvent = new Dictionary<int, FarmTileEventFlag>();
 
     public CarrotLevel fullyGrownCarrotLevel = CarrotLevel.Bad;
+    public int totalPlantScore = 0;
     
     private void Start()
     {
@@ -58,7 +59,7 @@ public class FarmTile : MonoBehaviour
         GameEvents.OnFarmActionDone += OnFarmActionDone;
     }
 
-    private void OnFarmActionDone(FarmTile targetTile, PlayerFarmAction action, ActionLevel score)
+    private void OnFarmActionDone(FarmTile targetTile, PlayerFarmAction action, ActionLevel level)
     {
         if (targetTile != this) return;
         switch (action)
@@ -79,41 +80,41 @@ public class FarmTile : MonoBehaviour
                 SetFarmTileEvent(FarmTileEventFlag.NoEvent);
                 break;
             case PlayerFarmAction.HarvestPlant:
+                //signal harvesting a carrot 
+                if(GameEvents.OnHarvestCarrot != null) GameEvents.OnHarvestCarrot.Invoke(fullyGrownCarrotLevel);
                 ResetFarmTile();
                 break;
         }
         
+        //add score
+        totalPlantScore += Config.GetScoreByActionLevel(level);
+
     }
 
     private void SwitchPlantState(FarmTilePlantState state)
     {
         switch (state)
         {
-                case FarmTilePlantState.Empty:
-                    currentPlantState = FarmTilePlantState.Empty;
-                    break;
-                case FarmTilePlantState.Plowed:
-                    currentPlantState = FarmTilePlantState.Plowed;
-                    break;
-                case FarmTilePlantState.Seeded:
-                    beatCountSinceSeeded = 0;
-                    currentPlantState = FarmTilePlantState.Seeded;
-                    break;
-                case FarmTilePlantState.Sprouted:
-                    currentPlantState = FarmTilePlantState.Sprouted;
-                    break;
-                case FarmTilePlantState.FullyGrown:
-                    //pick grown type
-                    fullyGrownCarrotLevel = CalculateFinalCarrotLevel();
-                    currentPlantState = FarmTilePlantState.FullyGrown;
-                    break;
+            case FarmTilePlantState.Empty:
+                currentPlantState = FarmTilePlantState.Empty;
+                break;
+            case FarmTilePlantState.Plowed:
+                currentPlantState = FarmTilePlantState.Plowed;
+                break;
+            case FarmTilePlantState.Seeded:
+                beatCountSinceSeeded = 0;
+                currentPlantState = FarmTilePlantState.Seeded;
+                break;
+            case FarmTilePlantState.Sprouted:
+                currentPlantState = FarmTilePlantState.Sprouted;
+                break;
+            case FarmTilePlantState.FullyGrown:
+                //pick grown type
+                fullyGrownCarrotLevel = Config.GetCarrotLevelByTotalScore(totalPlantScore);
+                currentPlantState = FarmTilePlantState.FullyGrown;
+                break;
         }
         UpdatePlantSpriteGO(state);
-    }
-    
-    public CarrotLevel CalculateFinalCarrotLevel()
-    {
-        return CarrotLevel.Bad;
     }
     
     private void UpdatePlantSpriteGO(FarmTilePlantState state)
@@ -200,7 +201,7 @@ public class FarmTile : MonoBehaviour
     {
         SwitchPlantState(FarmTilePlantState.Empty);
         beatCountSinceSeeded = 0;
-        
+        totalPlantScore = 0;
         BeatsToTriggerEvent.Clear();
         popUp.Reset();
         turnToSproutedOnBeat = 0;
