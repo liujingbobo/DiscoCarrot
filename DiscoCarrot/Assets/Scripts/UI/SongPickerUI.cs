@@ -15,14 +15,19 @@ public class SongPickerUI : SerializedMonoBehaviour
 
     public Koreography MenuMusic;
 
+    public AudioSource source;
+    
+    public AudioClip clip;
+    
     private void OnEnable()
     {
-        K.musicPlayer.LoadSong(MenuMusic);
-        K.musicPlayer.Play();
+        source.clip = clip;
+        source.Play();
     }
 
     public void PickMagic()
     {
+        source.Stop();
         K.musicPlayer.Stop();
         K.musicPlayer.LoadSong(MagicKoreo);
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameReadyStart);
@@ -30,6 +35,7 @@ public class SongPickerUI : SerializedMonoBehaviour
 
     public void PickTLT()
     {
+        source.Stop();
         K.musicPlayer.Stop();
         K.musicPlayer.LoadSong(TLTKoreo);
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameReadyStart);
@@ -37,6 +43,7 @@ public class SongPickerUI : SerializedMonoBehaviour
 
     public void PickBL()
     {
+        source.Stop();
         K.musicPlayer.Stop();
         K.musicPlayer.LoadSong(BLKoreo);
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameReadyStart);

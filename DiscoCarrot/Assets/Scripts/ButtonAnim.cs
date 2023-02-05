@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using SonicBloom.Koreo;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,7 +11,9 @@ public class ButtonAnim : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private Tweener tween;
     private Button a;
     public MonoBehaviour rotation;
-    
+    public Koreography song;
+    public AudioSource source;
+    public int SampleTime;
     public void OnPointerDown(PointerEventData eventData)
     {
         if (tween != null) tween.Complete();
@@ -25,12 +28,18 @@ public class ButtonAnim : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        source.volume = 0.05f;
         rotation.enabled = true;
+        K.musicPlayer.LoadSong(song);
+        K.musicPlayer.Play();
+        K.musicPlayer.SeekToSample(SampleTime);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        source.volume = 1f;
         rotation.enabled = false;
         transform.rotation = Quaternion.identity;
+        K.musicPlayer.Stop();
     }
 }

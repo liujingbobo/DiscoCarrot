@@ -66,7 +66,6 @@ public class S_Fertilize : MonoBehaviour, IState
 
             }else if (downPressed)
             {
-
                 if (Input.GetKeyDown(KeyCode.DownArrow))
                 {
                     var level = K.GetArrowLevel(expectedSampleTime);

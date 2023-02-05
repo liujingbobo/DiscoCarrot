@@ -10,6 +10,10 @@ namespace TimPlugin
         private T_StateKey _currentState;
         public TU_Context sharedContext;
         
+        public T_StateKey CurrentState
+        {
+            get => _currentState;
+        }
         public SimpleStateInstance<T_StateKey,TU_Context> AddStateInstance(T_StateKey state, SimpleStateInstance<T_StateKey,TU_Context> simpleStateInstance, bool showDebug = false)
         {
             simpleStateInstance.stateMachine = this;
