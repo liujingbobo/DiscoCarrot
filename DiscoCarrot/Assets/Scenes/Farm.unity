@@ -1040,6 +1040,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beb1b8843df49824485de4b7814e431c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &668332906 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4473206019632050843, guid: 673e868fdd8eab74e9b138f12fcaf789, type: 3}
+  m_PrefabInstance: {fileID: 4473206020293099215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f6b4a33e2258c49b256347ee4b343d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &702255826
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,17 +1764,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1300990351 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4473206019295475520, guid: 673e868fdd8eab74e9b138f12fcaf789, type: 3}
-  m_PrefabInstance: {fileID: 4473206020293099215}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1307301119
 GameObject:
   m_ObjectHideFlags: 0
@@ -2021,26 +2021,18 @@ MonoBehaviour:
     - {fileID: 1426992880}
     startButton: {fileID: 1288432845}
     logoCanvas: {fileID: 1106399859}
-    pickSongButton: {fileID: 1300990351}
     pickSongCanvas: {fileID: 167857095}
     readyTextImage: {fileID: 1717447823}
     goTextImage: {fileID: 314097605}
     endTextImage: {fileID: 2011218620}
-    conclusionCanvas: {fileID: 1509674067}
+    conclusionUI: {fileID: 668332906}
     againButton: {fileID: 773965402}
     homeButton: {fileID: 896612472}
-    harvestedCarrots: 
-    missedCount: 0
     settings: {fileID: 597871820}
     musicPlayer: {fileID: 556531976}
     koreographer: {fileID: 891291589}
     indicator: {fileID: 809772596}
     stateMachine: {fileID: 989943411}
---- !u!223 &1509674067 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 4473206019632050844, guid: 673e868fdd8eab74e9b138f12fcaf789, type: 3}
-  m_PrefabInstance: {fileID: 4473206020293099215}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1582602054
 PrefabInstance:
   m_ObjectHideFlags: 0

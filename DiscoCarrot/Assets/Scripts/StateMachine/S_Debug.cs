@@ -10,6 +10,7 @@ public class S_Debug : MonoBehaviour, IState
     private bool clockwise;
     private int MaxSampleTime;
     private bool allPerfect;
+    private bool block;
     public void Enter()
     {
         G.Indicator.SwitchTo(PlayerFarmAction.DebugPlant);
@@ -23,6 +24,7 @@ public class S_Debug : MonoBehaviour, IState
 
     public void Reset()
     {
+        block = false;
         phase = 0;
         clockwise = Random.Range(0, 2) == 1;
         MaxSampleTime = int.MaxValue;
@@ -30,6 +32,7 @@ public class S_Debug : MonoBehaviour, IState
 
     public void UpdateState()
     {
+        if (block) return;
         var targetKey = (phase, clockwise) switch
         {
             (0, _) => KeyCode.UpArrow,
@@ -63,7 +66,10 @@ public class S_Debug : MonoBehaviour, IState
                     {
                         // success
                         G.Indicator.UpdateState(level.ToArrowState());
-                        G.StateMachine.Success(allPerfect? ActionLevel.Perfect : ActionLevel.Good);
+                        var l = allPerfect ? ActionLevel.Perfect : ActionLevel.Good;
+                        G.Indicator.Present(l);
+                        block = true;
+                        StartCoroutine(Success(l));
                     }
                     else
                     {
@@ -91,6 +97,13 @@ public class S_Debug : MonoBehaviour, IState
             // Failed
             G.StateMachine.Fail();
         }
+    }
+
+    IEnumerator Success(ActionLevel level)
+    {
+        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
+        G.StateMachine.Success(level);
+        block = false;
     }
 
 }

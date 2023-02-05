@@ -9,7 +9,7 @@ public class S_Fertilize : MonoBehaviour, IState
     private int expectedSampleTime;
     private int maxSampleTime;
     private PressLevel firstLevel;
-    
+    private bool block;
     public void Enter()
     {
         G.Indicator.SwitchTo(PlayerFarmAction.FertilizePlant);
@@ -22,9 +22,11 @@ public class S_Fertilize : MonoBehaviour, IState
     {
         downPressed = false;
         expectedSampleTime = 0;
+        block = false;
     }
     public void UpdateState()
     {
+        if (block) return;
         var allValidKeyDown = K.GetAllValidKeyDown();
 
         if (allValidKeyDown.Count > 0)
@@ -78,11 +80,14 @@ public class S_Fertilize : MonoBehaviour, IState
                         // Success
                         // GameEvents.OnFarmActionDone.Invoke();
                         G.Indicator.UpdateState(level.ToArrowState());
-                        G.StateMachine.Success((firstLevel, level) switch
+                        var l = (firstLevel, level) switch
                         {
                             (PressLevel.Perfect, PressLevel.Perfect) => ActionLevel.Perfect,
                             _ => ActionLevel.Good
-                        });
+                        };
+                        block = true;
+                        G.Indicator.Present(l);
+                        StartCoroutine(Success(l));
                     }
                 }
                 else
@@ -99,5 +104,12 @@ public class S_Fertilize : MonoBehaviour, IState
             // Failed
             G.StateMachine.Fail();
         }
+    }
+
+    IEnumerator Success(ActionLevel level)
+    {
+        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
+        G.StateMachine.Success(level);
+        block = false;
     }
 }

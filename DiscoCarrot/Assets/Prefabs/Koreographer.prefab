@@ -897,7 +897,7 @@ MonoBehaviour:
       Data: Magic
     - Name: $v
       Entry: 4
-      Data: 44100
+      Data: 24962.2637
     - Name: 
       Entry: 8
       Data: 
@@ -909,7 +909,7 @@ MonoBehaviour:
       Data: BlindingLights
     - Name: $v
       Entry: 4
-      Data: 48000
+      Data: 16842.1055
     - Name: 
       Entry: 8
       Data: 

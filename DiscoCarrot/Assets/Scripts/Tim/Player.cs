@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     public PlayerAnimName currentAnimState;
     public int failSaveBeatCount = -1;
 
+    public FarmTile CurTile;
+
     void Start()
     {
         startPosition = transform.position;

@@ -10,7 +10,7 @@ public class S_Hoe : MonoBehaviour, IState
     private int MaxSampleTime;
     private int ExpectSample;
     private PressLevel firstLevel;
-    private bool tempLock = false;
+    private bool block = false;
     
     public void Enter()
     {
@@ -26,11 +26,12 @@ public class S_Hoe : MonoBehaviour, IState
         downPressed = false;
         MaxSampleTime = 0;
         ExpectSample = 0;
+        block = false;
     }
 
     public void UpdateState()
     {
-        if (tempLock) return;
+        if (block) return;
         
         var allValidKeyDown = K.GetAllValidKeyDown();
 
@@ -78,7 +79,8 @@ public class S_Hoe : MonoBehaviour, IState
                             (PressLevel.Perfect, PressLevel.Perfect) => ActionLevel.Perfect,
                             _ => ActionLevel.Good
                         };
-                        tempLock = true;
+                        G.Indicator.Present(actionLevel);
+                        block = true;
                         StartCoroutine(Success(actionLevel));
                     }
                 }
@@ -100,8 +102,8 @@ public class S_Hoe : MonoBehaviour, IState
 
     IEnumerator Success(ActionLevel level)
     {
-        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat / 2));
+        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
         G.StateMachine.Success(level);
-        tempLock = false;
+        block = false;
     }
 }

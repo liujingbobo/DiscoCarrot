@@ -9,7 +9,7 @@ public class S_Harvest : MonoBehaviour, IState
     private int MaxSampleTime;
     private int expectNext;
     private bool allPerfect;
-    private bool tempLock;
+    private bool block;
     public void Enter()
     {
         Reset();
@@ -27,7 +27,7 @@ public class S_Harvest : MonoBehaviour, IState
 
     public void UpdateState()
     {
-        if (tempLock) return;
+        if (block) return;
         
         var isEven = phase % 2 == 0;
 
@@ -114,9 +114,9 @@ public class S_Harvest : MonoBehaviour, IState
     }
     IEnumerator Success(ActionLevel level)
     {
-        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat / 2));
+        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
         G.StateMachine.Success(level);
-        tempLock = false;
+        block = false;
     }
     
 }

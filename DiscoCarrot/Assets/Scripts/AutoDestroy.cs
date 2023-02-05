@@ -16,7 +16,8 @@ public class AutoDestroy : MonoBehaviour
     IEnumerator SelfDestroy()
     {
         yield return new WaitForSeconds(.4f);
-        yield return canvas.DOFade(0, 0.4f);
+        yield return canvas.DOFade(0, 1f);
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 }

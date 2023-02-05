@@ -8,23 +8,43 @@ using UnityEngine;
 public class FarmingStateMachine : SerializedMonoBehaviour
 {
     public Dictionary<PlayerFarmAction, IState> StatesDictionary;
-    private PlayerFarmAction curAction = PlayerFarmAction.NoActionNeeded;
+    private PlayerFarmAction preAction = PlayerFarmAction.NoActionNeeded;
+    private FarmTile preTile;
     private bool active;
     private bool finished = true;
+
+    private Player player => GameManager.singleton.sharedContext.player;
+    private FarmTile curTile => player.CurTile;
+    
     private void Awake()
     {
-        GameEvents.OnReachedFarmTile += (tile, action) =>
-        {
-            GameEvents.currentTile = tile;
-            curAction = action;
-            SwitchTo(action);
-        };
         active = false;
         finished = true;
+        preTile = null;
     }
     
     private void Update()
     {
+        if (preTile != curTile)
+        {
+            preTile = curTile;
+            if (preTile == null)
+            {
+                SwitchTo(PlayerFarmAction.NoActionNeeded);
+            }
+            else
+            {
+                SwitchTo(preTile.GetNeededPlayerFarmAction());
+            }
+        }
+        else
+        {
+            if (curTile != null && curTile.GetNeededPlayerFarmAction() != preAction)
+            {
+                SwitchTo(curTile.GetNeededPlayerFarmAction());
+            }
+        }
+        
         if (finished)
         {
             if (K.GetAllValidKeyDown().Count > 0)
@@ -34,9 +54,9 @@ public class FarmingStateMachine : SerializedMonoBehaviour
         
             if (active)
             {
-                if (curAction != PlayerFarmAction.NoActionNeeded)
+                if (preAction != PlayerFarmAction.NoActionNeeded)
                 {
-                    StatesDictionary[curAction].UpdateState();
+                    StatesDictionary[preAction].UpdateState();
                 }
             }
         }
@@ -44,18 +64,19 @@ public class FarmingStateMachine : SerializedMonoBehaviour
     
     public void SwitchTo(PlayerFarmAction action)
     {
-        if (curAction != PlayerFarmAction.NoActionNeeded)
+        if (preAction != PlayerFarmAction.NoActionNeeded)
         {
-            StatesDictionary[curAction].Reset();
-            StatesDictionary[curAction].Exit();
+            StatesDictionary[preAction].Reset();
+            StatesDictionary[preAction].Exit();
+            G.Indicator.Close();
         }
 
-        curAction = action;
+        preAction = action;
         
-        if (curAction != PlayerFarmAction.NoActionNeeded)
+        if (preAction != PlayerFarmAction.NoActionNeeded)
         {
-            G.Indicator.SwitchTo(curAction);
-            StatesDictionary[curAction].Enter();
+            G.Indicator.SwitchTo(preAction);
+            StatesDictionary[preAction].Enter();
         }
     }
     
@@ -70,7 +91,7 @@ public class FarmingStateMachine : SerializedMonoBehaviour
     public void Success(ActionLevel level)
     {
         active = false;
-        G.Indicator.Present(level);
+        // G.Indicator.Present(level);
         StartCoroutine(SuccessCor(level));
     }
 
@@ -89,17 +110,16 @@ public class FarmingStateMachine : SerializedMonoBehaviour
     {
         G.Indicator.Close();
         GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Idle);
-        GameEvents.OnFarmActionDone.Invoke(GameEvents.currentTile, curAction, level);
+        GameEvents.OnFarmActionDone.Invoke(curTile, preAction, level);
         finished = true;
-        Reset();
         yield return null;
     }
 
     public void Reset()
     {
-        if (curAction != PlayerFarmAction.NoActionNeeded)
+        if (preAction != PlayerFarmAction.NoActionNeeded)
         {
-            StatesDictionary[curAction].Reset();
+            StatesDictionary[preAction].Reset();
         }
         G.Indicator.Reset();
     }

@@ -40,7 +40,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 412, y: 202}
+  m_SizeDelta: {x: 206, y: 101}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8827204264576221456
 CanvasRenderer:
@@ -201,7 +201,7 @@ MonoBehaviour:
     UpdaterTypeEnum: 2
     CustomDrive: {fileID: 0}
     StartValue: {x: 0, y: 0, z: 0}
-    EndValue: {x: 0, y: 20, z: 0}
+    EndValue: {x: 0, y: 40, z: 0}
   IsLocal: 0
   IsRectPosition: 1
   IsBezier: 0

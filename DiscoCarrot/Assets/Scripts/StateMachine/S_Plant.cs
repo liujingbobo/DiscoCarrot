@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class S_Plant : MonoBehaviour, IState
 {
-    private bool templock = false;
+    private bool block = false;
     public void Enter()
     {
         G.Indicator.SwitchTo(PlayerFarmAction.PlantSeed);
@@ -21,7 +21,7 @@ public class S_Plant : MonoBehaviour, IState
 
     public void UpdateState()
     {
-        if (templock) return;
+        if (block) return;
         var allValidKeyDown = K.GetAllValidKeyDown();
 
         if (allValidKeyDown.Count > 0)
@@ -45,6 +45,8 @@ public class S_Plant : MonoBehaviour, IState
                         PressLevel.Perfect => ActionLevel.Perfect,
                         PressLevel.Good => ActionLevel.Good
                     };
+                    G.Indicator.Present(l);
+                    block = true;
                     StartCoroutine(Success(l));
                 }
             }else
@@ -59,6 +61,6 @@ public class S_Plant : MonoBehaviour, IState
     {
         yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
         G.StateMachine.Success(level);
-        templock = false;
+        block = false;
     }
 }

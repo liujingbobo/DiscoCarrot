@@ -26,7 +26,8 @@ public class OperationIndicator : SerializedMonoBehaviour
     {
         if (curAction != PlayerFarmAction.NoActionNeeded)
         {
-            dic[curAction].Reset();
+            dic[curAction].Exit();
+            dic[curAction].Init();
         }
     }
     public void UpdateState(ArrowState state)
