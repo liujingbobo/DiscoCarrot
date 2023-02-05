@@ -14,7 +14,7 @@ public class Tester : MonoBehaviour
     void Start()
     {
         beatCountFromStart = 0;
-        StartCoroutine(AddBeat());
+        //StartCoroutine(AddBeat());
         
         GameEvents.OnReachedFarmTile += OnReachedFarmTile;
         GameEvents.OnLeaveFarmTile += OnLeaveFarmTile;

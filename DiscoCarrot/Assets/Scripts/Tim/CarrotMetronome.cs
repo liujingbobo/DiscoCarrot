@@ -23,15 +23,32 @@ public class CarrotMetronome : MonoBehaviour
     private Coroutine DownBeatCoroutine;
     private Coroutine UpBeatCoroutine;
 
+    private void Start()
+    {
+        RegisterBeatEvent();
+    }
+
     public void RegisterBeatEvent()
     {
+        GameEvents.OnDownBeat += OnDownBeat;
+        GameEvents.OnUpBeat += OnUpBeat;
     }
-    
+
+    //!!!!!!!!! TODO: SendUpBeat and SendDownBeat purposely exchanged, dont know why it doesnt work, just let it be for now
+    private void OnDownBeat()
+    {
+        SendUpBeat();
+    }
+
+    private void OnUpBeat()
+    {
+        SendDownBeat();
+    }
+
     [ContextMenu("test")]
     public void Test()
     {
-        /*ConfigMetronome(123);
-        StartShowingNotes();*/
+        ConfigMetronome(123);
     }
     
     public void ConfigMetronome(float bpm)
@@ -40,43 +57,6 @@ public class CarrotMetronome : MonoBehaviour
         reachCenterTime = secondsPerBeat * maxNotesOnScreen;
     }
     
-    public void StartShowingNotes()
-    {
-        if(DownBeatCoroutine != null) StopCoroutine(DownBeatCoroutine);
-        DownBeatCoroutine = StartCoroutine(ShowDownBeatCoroutine());
-        
-        Debug.Log(secondsPerBeat / 2);
-        DOTween.Sequence().AppendInterval(secondsPerBeat / 2).AppendCallback(() =>
-        {
-            if(UpBeatCoroutine != null) StopCoroutine(UpBeatCoroutine);
-            UpBeatCoroutine = StartCoroutine(ShowUpBeatCoroutine());
-        });
-
-    }
-    
-    [ContextMenu("stop")]
-    public void StopShowingNotes()
-    {
-        if(DownBeatCoroutine != null) StopCoroutine(DownBeatCoroutine);
-        if(UpBeatCoroutine != null) StopCoroutine(UpBeatCoroutine);
-    }
-
-    IEnumerator ShowDownBeatCoroutine()
-    {
-        while (true)
-        {
-            SendDownBeat();
-            yield return new WaitForSeconds(secondsPerBeat);
-        }
-    }
-    IEnumerator ShowUpBeatCoroutine()
-    {
-        while (true)
-        {
-            SendUpBeat();
-            yield return new WaitForSeconds(secondsPerBeat);
-        }
-    }
     public void Reset()
     {
         foreach (var note in DownBeats)
@@ -162,8 +142,8 @@ public class CarrotMetronome : MonoBehaviour
         //set to default state
         leftNote.gameObject.SetActive(true);
         rightNote.gameObject.SetActive(true);
-        leftNote.localScale = Vector3.one;
-        rightNote.localScale = Vector3.one;
+        leftNote.localScale = Vector3.one * 0.7f;
+        rightNote.localScale = Vector3.one * 0.7f;
         leftNote.position = leftStartPos.position;
         rightNote.position = rightStartPos.position;
         var leftNoteImage = leftNote.GetComponent<Image>();
