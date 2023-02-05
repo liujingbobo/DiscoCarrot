@@ -65,6 +65,7 @@ public class S_Debug : MonoBehaviour, IState
                     if (phase == 3)
                     {
                         // success
+                        
                         G.Indicator.UpdateState(level.ToArrowState());
                         var l = allPerfect ? ActionLevel.Perfect : ActionLevel.Good;
                         G.Indicator.Present(l);
@@ -75,10 +76,10 @@ public class S_Debug : MonoBehaviour, IState
                     {
                         if (phase == 0)
                         {
+                            GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Debugging);
                             MaxSampleTime = K.GetMaxSampleTime(kEvent, 1.5f);
                             allPerfect = true;
                         }
-                    
                         phase++;
                         // UpdateState
                         G.Indicator.UpdateState(level.ToArrowState());

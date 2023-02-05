@@ -39,6 +39,7 @@ public class S_Plant : MonoBehaviour, IState
                 {
                     // Success
                     // GameEvents.OnFarmActionDone.Invoke();
+                    GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.PlantSeed);
                     G.Indicator.UpdateState(ArrowState.Perfect);
                     var l = level switch
                     {

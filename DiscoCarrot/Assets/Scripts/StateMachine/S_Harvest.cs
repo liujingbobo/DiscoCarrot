@@ -10,6 +10,7 @@ public class S_Harvest : MonoBehaviour, IState
     private int expectNext;
     private bool allPerfect;
     private bool block;
+    private int maxNext;
     public void Enter()
     {
         Reset();
@@ -41,6 +42,7 @@ public class S_Harvest : MonoBehaviour, IState
                 {
                     var level = K.GetCurrentArrowLevel(true);
 
+                    var kEvent = K.GetClosestDownBeatEvent();
                     if (level == PressLevel.Miss)
                     {
                         // failed
@@ -50,7 +52,8 @@ public class S_Harvest : MonoBehaviour, IState
                     {
                         GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Harvest0);
                         if (phase == 0) allPerfect = true;
-                        expectNext = K.GetClosestDownBeatEvent().EndSample + (int) (K.SamplePerBeat * 0.5f);
+                        expectNext = kEvent.EndSample + (int) (K.SamplePerBeat * 0.5f);
+                        maxNext = K.GetMaxSampleTime(kEvent, 0.5f);
                         phase++;
                         // Update UI
                         G.Indicator.UpdateState(ArrowState.Perfect);
@@ -73,6 +76,7 @@ public class S_Harvest : MonoBehaviour, IState
                 {
                     var level = K.GetCurrentArrowLevel(false);
 
+                    var kEvent = K.GetClosestUpBeatEvent();
                     if (level == PressLevel.Miss)
                     {
                         // failed
@@ -91,7 +95,8 @@ public class S_Harvest : MonoBehaviour, IState
                         else
                         {
                             GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Harvest0);
-                            expectNext = K.GetClosestUpBeatEvent().EndSample + (int) (K.SamplePerBeat * 0.5f);
+                            expectNext = kEvent.EndSample + (int) (K.SamplePerBeat * 0.5f);
+                            maxNext = K.GetMaxSampleTime(kEvent, 0.5f);
                             phase++;
                             // Update UI
                             G.Indicator.UpdateState(level.ToArrowState());
@@ -106,7 +111,7 @@ public class S_Harvest : MonoBehaviour, IState
             }
         }
         
-        if (phase > 0 && K.CurrentSampleTime > expectNext)
+        if (phase > 0 && K.CurrentSampleTime > maxNext)
         {
             // Failed
             G.StateMachine.Fail();
