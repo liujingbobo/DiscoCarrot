@@ -1,0 +1,5 @@
+草丛.png
+size:712,712
+pma:true
+grass-5
+bounds:4,237,701,468

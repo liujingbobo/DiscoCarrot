@@ -1,0 +1,5 @@
+栏杆.png
+size:688,688
+pma:true
+fence-1
+bounds:4,400,680,284

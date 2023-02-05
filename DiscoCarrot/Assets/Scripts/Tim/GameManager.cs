@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
         //general references
         public Player player;
         public FarmTile[] farmTiles;
+        public CarrotMetronome carrotMetronome;
         
         //logo screen
         public Button startButton;
@@ -159,6 +160,11 @@ public class GameManager : MonoBehaviour
             stateMachine.sharedContext.goTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.goTextImage.color = Color.white;
             
+            //reset metronome
+            stateMachine.sharedContext.carrotMetronome.Reset();
+            stateMachine.sharedContext.carrotMetronome.ShowMetronomePanel();
+            stateMachine.sharedContext.carrotMetronome.ConfigMetronome((float) K.BeatsPerMinute);
+            
             Koreographer.Instance.ClearEventRegister();
 
             K.musicPlayer.Play();
@@ -200,8 +206,12 @@ public class GameManager : MonoBehaviour
             base.EnterState();
             Koreographer.Instance.RegisterForEvents("DownBeat", _ =>
             {
-                GameEvents.OnDownBeat.Invoke();
-            });            
+                if(GameEvents.OnDownBeat != null) GameEvents.OnDownBeat.Invoke();
+            });      
+            Koreographer.Instance.RegisterForEvents("UpBeat", _ =>
+            {
+                if(GameEvents.OnUpBeat != null) GameEvents.OnUpBeat.Invoke();
+            });
             Koreographer.Instance.RegisterForEvents("End", _ =>
             {
                 SwitchToState(GameLoopState.GameEnd);
