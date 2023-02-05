@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
         stateMachine.sharedContext = sharedContext;
         stateMachine.AddStateInstance(GameLoopState.Logo, new LogoSimpleState(), true);
         stateMachine.AddStateInstance(GameLoopState.SongPicker, new SongPickerState(), true);
+        stateMachine.AddStateInstance(GameLoopState.GameCutScene, new GameCutSceneState(), true);
         stateMachine.AddStateInstance(GameLoopState.GameReadyStart, new GameReadyStartState(), true);
         stateMachine.AddStateInstance(GameLoopState.GameRunning, new GameRunningState(), true);
         stateMachine.AddStateInstance(GameLoopState.GameEnd, new GameEndState(), true);
@@ -34,9 +35,12 @@ public class GameManager : MonoBehaviour
         stateMachine.SwitchToState(GameLoopState.Logo);
     }
 
-    
-    
-    
+    private void Update()
+    {
+        stateMachine.ExecuteCurrentStateUpdate();
+    }
+
+
     [Serializable]
     public class GameManagerContext
     {
@@ -51,6 +55,10 @@ public class GameManager : MonoBehaviour
         
         //song picker
         public GameObject pickSongCanvas;
+        
+        //GameCutScene
+        public Canvas cutSceneCanvas;
+        public Image[] cutSceneImages;
         
         //GameReadyStart
         public Image readyTextImage;
@@ -79,7 +87,8 @@ public class GameManager : MonoBehaviour
     {
         public int[] harvestedCarrots = new int[4];
         public int missedCount = 0;
-        
+        public Koreography pickedSongKore;
+
 
 
         public GameRunTimeValues()
@@ -93,6 +102,7 @@ public class GameManager : MonoBehaviour
     {
         Logo,
         SongPicker,
+        GameCutScene,
         GameReadyStart,
         GameRunning,
         GameEnd,
@@ -138,11 +148,59 @@ public class GameManager : MonoBehaviour
             stateMachine.sharedContext.pickSongCanvas.SetActive(false);
         }
     }
+    public class GameCutSceneState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    {
+        private int currentPicIndex = 0;
+        public override void EnterState()
+        {
+            base.EnterState();
+            currentPicIndex = 0;
+            stateMachine.sharedContext.cutSceneCanvas.gameObject.SetActive(true);
+            stateMachine.sharedContext.cutSceneImages[currentPicIndex].gameObject.SetActive(true);
+        }
+
+        public override void StateUpdate()
+        {
+            base.StateUpdate();
+            if (currentPicIndex >= stateMachine.sharedContext.cutSceneImages.Length)
+            {
+                SwitchToState(GameLoopState.GameReadyStart);
+            }
+            else
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    currentPicIndex++;
+                    if (currentPicIndex < stateMachine.sharedContext.cutSceneImages.Length)
+                    {
+                        stateMachine.sharedContext.cutSceneImages[currentPicIndex].gameObject.SetActive(true);
+                    }
+                    if (currentPicIndex == stateMachine.sharedContext.cutSceneImages.Length - 1)
+                    {
+                        SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.door);
+                    }
+                }
+            }
+        }
+
+        public override void ExitState()
+        {
+            base.ExitState();
+            stateMachine.sharedContext.cutSceneImages[stateMachine.sharedContext.cutSceneImages.Length-1].gameObject.SetActive(true);
+            stateMachine.sharedContext.cutSceneCanvas.gameObject.SetActive(false);
+
+        }
+    }
     public class GameReadyStartState : SimpleStateInstance<GameLoopState, GameManagerContext>
     {
         public override void EnterState()
         {
             base.EnterState();
+            //play song
+            K.musicPlayer.Stop();
+            K.musicPlayer.LoadSong(stateMachine.sharedContext.runTimeValues.pickedSongKore);
+
+            
             //ResetEverything
             stateMachine.sharedContext.player.ResetPlayer();
             foreach (var t in stateMachine.sharedContext.farmTiles)
@@ -155,6 +213,8 @@ public class GameManager : MonoBehaviour
             stateMachine.sharedContext.conclusionUI.gameObject.SetActive(false);
 
             //set text tween
+            stateMachine.sharedContext.readyTextImage.gameObject.SetActive(true);
+            stateMachine.sharedContext.goTextImage.gameObject.SetActive(true);
             stateMachine.sharedContext.readyTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.readyTextImage.color = Color.white;
             stateMachine.sharedContext.goTextImage.transform.localScale = Vector3.zero;

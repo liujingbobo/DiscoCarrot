@@ -25,6 +25,7 @@ public class FarmingStateMachine : SerializedMonoBehaviour
     
     private void Update()
     {
+        if (GameManager.singleton.stateMachine.CurrentState != GameManager.GameLoopState.GameRunning) return;
         if (preTile != curTile)
         {
             preTile = curTile;
@@ -64,6 +65,7 @@ public class FarmingStateMachine : SerializedMonoBehaviour
     
     public void SwitchTo(PlayerFarmAction action)
     {
+        if (GameManager.singleton.stateMachine.CurrentState != GameManager.GameLoopState.GameRunning) return;
         if (preAction != PlayerFarmAction.NoActionNeeded)
         {
             StatesDictionary[preAction].Reset();

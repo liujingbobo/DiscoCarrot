@@ -12,6 +12,7 @@ public class SoundEffectManager : MonoBehaviour
     
     public enum SoundEffectName
     {
+        door,
         fail,
         go,
         harvest,
