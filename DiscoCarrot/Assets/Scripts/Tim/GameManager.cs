@@ -257,8 +257,6 @@ public class GameManager : MonoBehaviour
             base.ExitState();
             stateMachine.sharedContext.readyTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.goTextImage.transform.localScale = Vector3.zero;
-            stateMachine.sharedContext.readyTextImage.gameObject.SetActive(false);
-            stateMachine.sharedContext.goTextImage.gameObject.SetActive(false);
         }
     }
     public class GameRunningState : SimpleStateInstance<GameLoopState, GameManagerContext>

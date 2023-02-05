@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5f95561aa52de341a8346f9cc617d92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundVolume: 0.7
+  soundVolume: 1
   audioClipList:
   - {fileID: 8300000, guid: 01dd54a61448db94a9996055104a2fac, type: 3}
   - {fileID: 8300000, guid: 8d223b992a25e5a4dbe641d3e600ee2d, type: 3}
