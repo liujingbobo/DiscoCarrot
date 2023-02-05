@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public CharacterController cc;
     public float speed;
     public Vector3 startPosition;
-    private bool isPlayerMovable = false;
+    public bool isPlayerMovable = false;
     
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimationName;
@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
         isPlayerMovable = movable;
     }
     
-    private void Update()
+    private void FixedUpdate()
     {
         MovableStateUpdate();
     }

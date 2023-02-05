@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -22,6 +23,7 @@ public class FarmTile : MonoBehaviour
         NeedDebug,
     }
 
+    public GameObject GameEffect;
     public FarmTilePopUp popUp;
     //config values, set in editor
     public Vector2Int seedStateNeedWaterSpawnWindow; //define watering windows for seed events
@@ -64,22 +66,28 @@ public class FarmTile : MonoBehaviour
         switch (action)
         {
             case PlayerFarmAction.PlowLand:
+                PlayEffectForDuration(1);
                 SwitchPlantState(FarmTilePlantState.Plowed);
                 break;
             case PlayerFarmAction.PlantSeed:
+                PlayEffectForDuration(1);
                 SwitchPlantState(FarmTilePlantState.Seeded);
                 break;
             case PlayerFarmAction.WaterPlant:
+                PlayEffectForDuration(1);
                 SetFarmTileEvent(FarmTileEventFlag.NoEvent);
                 break;
             case PlayerFarmAction.FertilizePlant:
+                PlayEffectForDuration(1);
                 SetFarmTileEvent(FarmTileEventFlag.NoEvent);
                 break;
             case PlayerFarmAction.DebugPlant:
+                PlayEffectForDuration(1);
                 SetFarmTileEvent(FarmTileEventFlag.NoEvent);
                 break;
             case PlayerFarmAction.HarvestPlant:
                 //signal harvesting a carrot 
+                PlayEffectForDuration(1);
                 if(GameEvents.OnHarvestCarrot != null) GameEvents.OnHarvestCarrot.Invoke(fullyGrownCarrotLevel);
                 ResetFarmTile();
                 break;
@@ -88,6 +96,17 @@ public class FarmTile : MonoBehaviour
         //add score
         totalPlantScore += Config.GetScoreByActionLevel(level);
 
+    }
+
+    public Tween effectTween = null;
+    public void PlayEffectForDuration(float second)
+    {
+        GameEffect.gameObject.SetActive(false);
+        if(effectTween != null) effectTween.Kill();
+        effectTween = DOTween.Sequence()
+            .AppendCallback(() => { GameEffect.gameObject.SetActive(true); })
+            .AppendInterval(second)
+            .AppendCallback(() => { GameEffect.gameObject.SetActive(false); });
     }
 
     private void SwitchPlantState(FarmTilePlantState state)
@@ -192,6 +211,7 @@ public class FarmTile : MonoBehaviour
     public void ResetFarmTile()
     {
         SwitchPlantState(FarmTilePlantState.Empty);
+        GameEffect.SetActive(false);
         beatCountSinceSeeded = 0;
         totalPlantScore = 0;
         BeatsToTriggerEvent.Clear();

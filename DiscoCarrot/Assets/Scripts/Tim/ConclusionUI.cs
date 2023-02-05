@@ -76,7 +76,17 @@ public class ConclusionUI : MonoBehaviour
             image.gameObject.SetActive(false);
         }
 
-        grade = 3;
+        //reset
+        CarrotBarImages[0].sprite = carrotSprites[0];
+        StarImages[0].transform.localScale = Vector3.zero;
+        StarImages[1].transform.localScale = Vector3.zero;
+        CarrotBarImages[1].sprite = carrotSprites[0];
+        StarImages[2].transform.localScale = Vector3.zero;
+        StarImages[3].transform.localScale = Vector3.zero;
+        CarrotBarImages[2].sprite = carrotSprites[0];
+        StarImages[4].transform.localScale = Vector3.zero;
+        StarImages[5].transform.localScale = Vector3.zero;
+        
         //star1
         if (grade >= 1)
         {
@@ -84,12 +94,8 @@ public class ConclusionUI : MonoBehaviour
                 .AppendCallback(() =>
                 {
                     CarrotBarImages[0].sprite = carrotSprites[1];
-                    CarrotBarImages[0].gameObject.SetActive(true);
                     StarImages[0].gameObject.SetActive(true);
                     StarImages[1].gameObject.SetActive(true);
-                    
-                    StarImages[0].transform.localScale = Vector3.zero;
-                    StarImages[1].transform.localScale = Vector3.zero;
                 })
                 .Append(StarImages[0].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic))
                 .Append(StarImages[1].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic));
@@ -101,12 +107,8 @@ public class ConclusionUI : MonoBehaviour
                 .AppendCallback(() =>
                 {
                     CarrotBarImages[1].sprite = carrotSprites[1];
-                    CarrotBarImages[1].gameObject.SetActive(true);
                     StarImages[2].gameObject.SetActive(true);
                     StarImages[3].gameObject.SetActive(true);
-                    
-                    StarImages[2].transform.localScale = Vector3.zero;
-                    StarImages[3].transform.localScale = Vector3.zero;
                 })
                 .Append(StarImages[2].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic))
                 .Append(StarImages[3].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic));
@@ -118,13 +120,8 @@ public class ConclusionUI : MonoBehaviour
                 .AppendCallback(() =>
                 {
                     CarrotBarImages[2].sprite = carrotSprites[1];
-                    CarrotBarImages[2].gameObject.SetActive(true);
-                    
                     StarImages[4].gameObject.SetActive(true);
                     StarImages[5].gameObject.SetActive(true);
-                    
-                    StarImages[4].transform.localScale = Vector3.zero;
-                    StarImages[5].transform.localScale = Vector3.zero;
                 })
                 .Append(StarImages[4].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic))
                 .Append(StarImages[5].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic));

@@ -71,10 +71,9 @@ public static class Config
     public const int MISSED_DEDUCT_SCORE = -10;
     public static CarrotLevel GetCarrotLevelByTotalScore(int totalScore)
     {
-        var scoreRatio = totalScore / (float) MAX_PLANT_SCORE;
-        if (scoreRatio >= 1) return CarrotLevel.Disco;
-        if (scoreRatio >= 0.9f) return CarrotLevel.Muscle;
-        if (scoreRatio >= 0.8f) return CarrotLevel.Normal;
+        if (totalScore >= 33) return CarrotLevel.Disco;
+        if (totalScore >= 28) return CarrotLevel.Muscle;
+        if (totalScore >= 23) return CarrotLevel.Normal;
         return CarrotLevel.Bad;
     }
     
@@ -82,21 +81,19 @@ public static class Config
     {
         switch (level)
         {
-            case CarrotLevel.Disco:return 100;
-            case CarrotLevel.Muscle:return 80;
-            case CarrotLevel.Normal:return 50;
-            case CarrotLevel.Bad:return 30;
+            case CarrotLevel.Disco:return 700;
+            case CarrotLevel.Muscle:return 400;
+            case CarrotLevel.Normal:return 200;
+            case CarrotLevel.Bad:return 100;
         }
         return 0;
     }
     
-    public const int MAX_GAME_SCORE = 1000;
     public static int GetGradeFromTotalScore(int totalScore)
     {
-        var scoreRatio = totalScore / (float) MAX_GAME_SCORE;
-        if (scoreRatio >= 1) return 3;
-        if (scoreRatio >= 0.7f) return 2;
-        if (scoreRatio >= 0.5f) return 1;
+        if (totalScore >= 5600) return 3;
+        if (totalScore >= 2800) return 2;
+        if (totalScore >= 1400) return 1;
         return 0;
     }
 }

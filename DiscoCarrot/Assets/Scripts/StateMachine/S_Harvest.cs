@@ -90,6 +90,7 @@ public class S_Harvest : MonoBehaviour, IState
                             GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Harvest1);
                             G.Indicator.UpdateState(level.ToArrowState());
                             StartCoroutine(Success(allPerfect ? ActionLevel.Perfect : ActionLevel.Good));
+                            block = true;
                             return;
                         }
                         else
@@ -111,7 +112,7 @@ public class S_Harvest : MonoBehaviour, IState
             }
         }
         
-        if (phase > 0 && K.CurrentSampleTime > maxNext)
+        if (phase > 0 &&   K.CurrentSampleTime > maxNext)
         {
             // Failed
             G.StateMachine.Fail();

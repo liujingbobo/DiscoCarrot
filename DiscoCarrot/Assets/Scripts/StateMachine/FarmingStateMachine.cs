@@ -99,6 +99,7 @@ public class FarmingStateMachine : SerializedMonoBehaviour
 
     IEnumerator FailCor()
     {
+        GameManager.singleton.sharedContext.runTimeValues.missedCount += 1;
         GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Sad);
         finished = false;
         var sec = K.BeatsPerMinute;

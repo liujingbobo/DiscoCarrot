@@ -266,6 +266,7 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
+
             Koreographer.Instance.RegisterForEvents("DownBeat", _ =>
             {
                 if(GameEvents.OnDownBeat != null) GameEvents.OnDownBeat.Invoke();
@@ -285,6 +286,15 @@ public class GameManager : MonoBehaviour
             GameEvents.OnLeaveFarmTile += OnLeaveFarmTile;
             GameEvents.OnHarvestCarrot += OnHarvestCarrot;
             stateMachine.sharedContext.player.SetPlayerMovable(true);
+            
+            
+            
+            //TODO Test Code
+            DOTween.Sequence().AppendInterval(10).AppendCallback(() =>
+            {
+                SwitchToState(GameLoopState.GameEnd);
+            });
+
         }
         
         public override void ExitState()
@@ -318,19 +328,21 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
+            //hide carrot
+            stateMachine.sharedContext.carrotMetronome.HideMetronomePanel();
             //set text tween
             stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.endTextImage.color = Color.white;
-            
-            Koreographer.Instance.ClearEventRegister();;
+
+            Koreographer.Instance.ClearEventRegister();
             
             var endInTweener = stateMachine.sharedContext.endTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
             var endOutTweener = stateMachine.sharedContext.endTextImage.DOFade(0, 0.5f);
             DOTween.Sequence()
-                .Append(endInTweener)
-                .Append(endOutTweener)
+                //.Append(endInTweener)
+                //.Append(endOutTweener)
                 .AppendInterval(1f)
-                .AppendCallback(() => { SwitchToState(GameLoopState.Conclusion); });
+                .AppendCallback(() => {  SwitchToState(GameLoopState.Conclusion); });
         }
         
         public override void ExitState()
