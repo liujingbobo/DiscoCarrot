@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using SonicBloom.Koreo;
+using SonicBloom.Koreo.Players;
 using TimPlugin;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -41,14 +43,14 @@ public class GameManager : MonoBehaviour
         //general references
         public Player player;
         public FarmTile[] farmTiles;
+        public CarrotMetronome carrotMetronome;
         
         //logo screen
         public Button startButton;
         public Canvas logoCanvas;
         
         //song picker
-        public Button pickSongButton;
-        public Canvas pickSongCanvas;
+        public GameObject pickSongCanvas;
         
         //GameReadyStart
         public Image readyTextImage;
@@ -58,15 +60,33 @@ public class GameManager : MonoBehaviour
         public Image endTextImage;
 
         //Conclusion
-        public Canvas conclusionCanvas;
+        public ConclusionUI conclusionUI;
         public Button againButton;
         public Button homeButton;
         
-        
-        
         //cached runtime values
-        public List<int> harvestedCarrots = new List<int>(4);
-        public int totalHarvestScore = 0;
+        public GameRunTimeValues runTimeValues = new GameRunTimeValues();
+        
+        // Koreographer
+        public GameSettings settings;
+        public SimpleMusicPlayer musicPlayer;
+        public Koreographer koreographer;
+        public OperationIndicator indicator;
+        public FarmingStateMachine stateMachine;
+    }
+
+    public class GameRunTimeValues
+    {
+        public int[] harvestedCarrots = new int[4];
+        public int missedCount = 0;
+        
+
+
+        public GameRunTimeValues()
+        {
+            harvestedCarrots = new int[4];
+            missedCount = 0;
+        }
     }
     
     public enum GameLoopState
@@ -86,6 +106,12 @@ public class GameManager : MonoBehaviour
             base.EnterState();
             stateMachine.sharedContext.logoCanvas.gameObject.SetActive(true);
             stateMachine.sharedContext.startButton.onClick.AddListener(OnButtonClick);
+
+            G.Settings = stateMachine.sharedContext.settings;
+            K.koreographer = stateMachine.sharedContext.koreographer;
+            K.musicPlayer = stateMachine.sharedContext.musicPlayer;
+            G.Indicator = stateMachine.sharedContext.indicator;
+            G.StateMachine = stateMachine.sharedContext.stateMachine;
         }
         public override void ExitState()
         {
@@ -104,19 +130,12 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.pickSongCanvas.gameObject.SetActive(true);
-            stateMachine.sharedContext.pickSongButton.onClick.AddListener(OnButtonClick);
+            stateMachine.sharedContext.pickSongCanvas.SetActive(true);
         }
         public override void ExitState()
         {
             base.ExitState();
-            stateMachine.sharedContext.pickSongCanvas.gameObject.SetActive(false);
-            stateMachine.sharedContext.pickSongButton.onClick.RemoveListener(OnButtonClick);
-        }
-
-        void OnButtonClick()
-        {
-            SwitchToState(GameLoopState.GameReadyStart);
+            stateMachine.sharedContext.pickSongCanvas.SetActive(false);
         }
     }
     public class GameReadyStartState : SimpleStateInstance<GameLoopState, GameManagerContext>
@@ -130,6 +149,10 @@ public class GameManager : MonoBehaviour
             {
                 t.ResetFarmTile();
             }
+            
+            stateMachine.sharedContext.runTimeValues = new GameRunTimeValues();
+            stateMachine.sharedContext.conclusionUI.Reset();
+            stateMachine.sharedContext.conclusionUI.gameObject.SetActive(false);
 
             //set text tween
             stateMachine.sharedContext.readyTextImage.transform.localScale = Vector3.zero;
@@ -137,21 +160,36 @@ public class GameManager : MonoBehaviour
             stateMachine.sharedContext.goTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.goTextImage.color = Color.white;
             
+            //reset metronome
+            stateMachine.sharedContext.carrotMetronome.Reset();
+            stateMachine.sharedContext.carrotMetronome.ShowMetronomePanel();
+            stateMachine.sharedContext.carrotMetronome.ConfigMetronome((float) K.BeatsPerMinute);
             
-            var readyInTweener = stateMachine.sharedContext.readyTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
-            var readyOutTweener = stateMachine.sharedContext.readyTextImage.DOFade(0, 0.5f);
-            var goInTweener = stateMachine.sharedContext.goTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
-            var goOutTweener = stateMachine.sharedContext.goTextImage.DOFade(0, 0.5f);
-            var sequence = DOTween.Sequence();
-            sequence.AppendInterval(1f)
-                .AppendCallback(()=>{SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.ready);})
-                .Append(readyInTweener)
-                .Append(readyOutTweener)
-                .AppendInterval(1f)
-                .AppendCallback(()=>{SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.go);})
-                .Append(goInTweener)
-                .Append(goOutTweener)
-                .AppendCallback(() => { SwitchToState(GameLoopState.GameRunning); });
+            Koreographer.Instance.ClearEventRegister();
+
+            K.musicPlayer.Play();
+
+            Koreographer.Instance.RegisterForEvents("Ready", DoReady);
+            Koreographer.Instance.RegisterForEvents("Start", DoStart);
+
+            void DoReady(KoreographyEvent kEvent)
+            {
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.ready);
+                var sequence = DOTween.Sequence();
+                var readyInTweener = stateMachine.sharedContext.readyTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+                var readyOutTweener = stateMachine.sharedContext.readyTextImage.DOFade(0, 0.5f);
+                sequence.Append(readyInTweener).Append(readyOutTweener);
+            }
+
+            void DoStart(KoreographyEvent kEvent)
+            {
+                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.go);
+                var sequence = DOTween.Sequence();
+                var goInTweener = stateMachine.sharedContext.goTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+                var goOutTweener = stateMachine.sharedContext.goTextImage.DOFade(0, 0.5f);
+                sequence.Append(goInTweener).Append(goOutTweener);
+                SwitchToState(GameLoopState.GameRunning); 
+            }
         }
         
         public override void ExitState()
@@ -166,12 +204,22 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.harvestedCarrots = new List<int>(4);
-            GameEvents.OnHarvestCarrot += OnHarvestCarrot;
+            Koreographer.Instance.RegisterForEvents("DownBeat", _ =>
+            {
+                if(GameEvents.OnDownBeat != null) GameEvents.OnDownBeat.Invoke();
+            });      
+            Koreographer.Instance.RegisterForEvents("UpBeat", _ =>
+            {
+                if(GameEvents.OnUpBeat != null) GameEvents.OnUpBeat.Invoke();
+            });
+            Koreographer.Instance.RegisterForEvents("End", _ =>
+            {
+                SwitchToState(GameLoopState.GameEnd);
+            });
             
+            // stateMachine.sharedContext.harvestedCarrots = new List<int>(4);
+            GameEvents.OnHarvestCarrot += OnHarvestCarrot;
             stateMachine.sharedContext.player.SetPlayerMovable(true);
-            DOTween.Sequence().AppendInterval(90f)
-                .AppendCallback(() => { SwitchToState(GameLoopState.GameEnd); });
         }
         
         public override void ExitState()
@@ -183,7 +231,7 @@ public class GameManager : MonoBehaviour
 
         public void OnHarvestCarrot(CarrotLevel level)
         {
-            stateMachine.sharedContext.harvestedCarrots[(int) level] += 1;
+            stateMachine.sharedContext.runTimeValues.harvestedCarrots[(int) level] += 1;
         }
     }
     public class GameEndState : SimpleStateInstance<GameLoopState, GameManagerContext>
@@ -194,6 +242,8 @@ public class GameManager : MonoBehaviour
             //set text tween
             stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.endTextImage.color = Color.white;
+            
+            Koreographer.Instance.ClearEventRegister();;
             
             var endInTweener = stateMachine.sharedContext.endTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
             var endOutTweener = stateMachine.sharedContext.endTextImage.DOFade(0, 0.5f);
@@ -216,23 +266,14 @@ public class GameManager : MonoBehaviour
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(true);
+            stateMachine.sharedContext.conclusionUI.gameObject.SetActive(true);
+            stateMachine.sharedContext.conclusionUI.OpenConclusionUI();
             stateMachine.sharedContext.againButton.onClick.AddListener(OnAgainButtonClick);
             stateMachine.sharedContext.homeButton.onClick.AddListener(OnHomeButtonClick);
-            
-            //calculate Harvested Carrot Score
-            var totalScore = 0;
-            for (int level = 0; level < stateMachine.sharedContext.harvestedCarrots.Count; level++)
-            {
-                var carrotLevel = (CarrotLevel) level;
-                var carrotCount = stateMachine.sharedContext.harvestedCarrots[level];
-                stateMachine.sharedContext.totalHarvestScore += (carrotCount * Config.GetScoreByCarrotLevel(carrotLevel));
-            }
         }
         public override void ExitState()
         {
-            stateMachine.sharedContext.conclusionCanvas.gameObject.SetActive(false);
-
+            stateMachine.sharedContext.conclusionUI.Reset();
             base.ExitState();
         }
         void OnAgainButtonClick()

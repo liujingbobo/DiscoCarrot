@@ -68,6 +68,7 @@ public static class Config
     }
     
     public const int MAX_PLANT_SCORE = 35;
+    public const int MISSED_DEDUCT_SCORE = -10;
     public static CarrotLevel GetCarrotLevelByTotalScore(int totalScore)
     {
         var scoreRatio = totalScore / (float) MAX_PLANT_SCORE;
@@ -86,6 +87,16 @@ public static class Config
             case CarrotLevel.Normal:return 50;
             case CarrotLevel.Bad:return 30;
         }
+        return 0;
+    }
+    
+    public const int MAX_GAME_SCORE = 1000;
+    public static int GetGradeFromTotalScore(int totalScore)
+    {
+        var scoreRatio = totalScore / (float) MAX_GAME_SCORE;
+        if (scoreRatio >= 1) return 3;
+        if (scoreRatio >= 0.7f) return 2;
+        if (scoreRatio >= 0.5f) return 1;
         return 0;
     }
 }
@@ -131,7 +142,7 @@ public enum ArrowState
 public interface IIndicator
 {
     void Init();
-    void Pass(ArrowState state);
+    void UpdateState(ArrowState state);
     void Exit();
     void Reset();
 }

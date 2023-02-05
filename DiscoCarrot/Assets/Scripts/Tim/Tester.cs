@@ -14,7 +14,7 @@ public class Tester : MonoBehaviour
     void Start()
     {
         beatCountFromStart = 0;
-        StartCoroutine(AddBeat());
+        //StartCoroutine(AddBeat());
         
         GameEvents.OnReachedFarmTile += OnReachedFarmTile;
         GameEvents.OnLeaveFarmTile += OnLeaveFarmTile;
@@ -29,29 +29,32 @@ public class Tester : MonoBehaviour
     private void OnReachedFarmTile(FarmTile arg1, PlayerFarmAction arg2)
     {
         targetTile = arg1;
+        GameManager.singleton.sharedContext.player.CurTile = arg1;
         Debug.Log($"OnReachedFarmTile, detected need action {arg2}");
     }
     private void OnLeaveFarmTile(FarmTile obj)
     {
         if (targetTile == obj) targetTile = null;
+        if (GameManager.singleton.sharedContext.player.CurTile == obj)
+            GameManager.singleton.sharedContext.player.CurTile = null;
         Debug.Log($"OnLeaveFarmTile");
     }
     
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (targetTile != null)
-            {
-                var actionName = targetTile.GetNeededPlayerFarmAction();
-                if(actionName == PlayerFarmAction.NoActionNeeded) return;
-                rabbitPlayer.SwitchToAnimState(Config.tmpFarmActionToAnim[actionName], targetTile.GetTeleportPointTransform(actionName));
-                GameEvents.OnFarmActionDone.Invoke(targetTile, actionName, ActionLevel.Perfect);
-            }
-        }
-
-        textMeshProText.text = beatCountFromStart.ToString();
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     if (targetTile != null)
+        //     {
+        //         var actionName = targetTile.GetNeededPlayerFarmAction();
+        //         if(actionName == PlayerFarmAction.NoActionNeeded) return;
+        //         rabbitPlayer.SwitchToAnimState(Config.tmpFarmActionToAnim[actionName], targetTile.GetTeleportPointTransform(actionName));
+        //         GameEvents.OnFarmActionDone.Invoke(targetTile, actionName, ActionLevel.Perfect);
+        //     }
+        // }
+        //
+        // textMeshProText.text = beatCountFromStart.ToString();
     }
 
     IEnumerator AddBeat()

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2076007791, guid: aa81bbec85a3f423193272a7c6154986, type: 3}
+  m_Name: Magic
+  m_EditorClassIdentifier: 
+  mSourceClip: {fileID: 8300000, guid: ac567722c6cf7a145b00df72762f3cbd, type: 3}
+  mAudioFilePath: 
+  mSampleRate: 44100
+  mIgnoreLatencyOffset: 0
+  mTempoSections:
+  - sectionName: Null
+    startSample: 0
+    samplesPerBeat: 24962.264150943396
+    beatsPerMeasure: 4
+    bStartNewMeasure: 1
+  - sectionName: Song
+    startSample: 732
+    samplesPerBeat: 24962.264150943396
+    beatsPerMeasure: 4
+    bStartNewMeasure: 1
+  mTracks:
+  - {fileID: 11400000, guid: efdbbdff1ac2ebe42989479556982ee2, type: 2}
+  - {fileID: 11400000, guid: 64b861d37b4c7f5488dfcbdbd88a3e10, type: 2}
+  - {fileID: 11400000, guid: 1e84c0ae39019da4aafa6bb9fb5205ae, type: 2}
+  - {fileID: 11400000, guid: 1f3df25889a809740b7d87f57111bf5c, type: 2}
+  - {fileID: 11400000, guid: cc8892ed0f8cc834596ae5004f087480, type: 2}
