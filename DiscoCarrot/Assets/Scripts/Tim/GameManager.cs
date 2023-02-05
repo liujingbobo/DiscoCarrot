@@ -207,6 +207,7 @@ public class GameManager : MonoBehaviour
             Koreographer.Instance.RegisterForEvents("DownBeat", _ =>
             {
                 if(GameEvents.OnDownBeat != null) GameEvents.OnDownBeat.Invoke();
+                if(GameEvents.OnOneBeatPassed != null) GameEvents.OnOneBeatPassed.Invoke();
             });      
             Koreographer.Instance.RegisterForEvents("UpBeat", _ =>
             {
