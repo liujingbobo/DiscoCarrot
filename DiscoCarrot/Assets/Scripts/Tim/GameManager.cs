@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
         public Image[] cutSceneImages;
         
         //GameReadyStart
+        public AudioSource source;
         public Image readyTextImage;
         public Image goTextImage;
 
@@ -227,6 +228,7 @@ public class GameManager : MonoBehaviour
             
             Koreographer.Instance.ClearEventRegister();
 
+            GameManager.singleton.sharedContext.source.Stop();
             K.musicPlayer.Play();
 
             Koreographer.Instance.RegisterForEvents("Ready", DoReady);

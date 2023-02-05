@@ -23,26 +23,28 @@ public class SongPickerUI : SerializedMonoBehaviour
         {
             source.Play();
         }
-        
     }
 
     public void PickMagic()
     {
-        source.Stop();
+        source.volume = 0.8f;
+        K.musicPlayer.Stop();
         GameManager.singleton.sharedContext.runTimeValues.pickedSongKore = MagicKoreo;
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameCutScene);
     }
 
     public void PickTLT()
     {
-        source.Stop();
+        source.volume = 0.8f;
+        K.musicPlayer.Stop();
         GameManager.singleton.sharedContext.runTimeValues.pickedSongKore = TLTKoreo;
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameCutScene);
     }
 
     public void PickBL()
     {
-        source.Stop();
+        source.volume = 0.8f;
+        K.musicPlayer.Stop();
         GameManager.singleton.sharedContext.runTimeValues.pickedSongKore = BLKoreo;
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameCutScene);
     }

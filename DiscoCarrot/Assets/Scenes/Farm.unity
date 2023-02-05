@@ -152,7 +152,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.38, y: 1, z: 11.88}
   m_LocalScale: {x: 10.97646, y: 2, z: 9.739734}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 250683083}
   m_RootOrder: 0
@@ -181,7 +180,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -300,7 +298,6 @@ Transform:
   m_LocalRotation: {x: 0.4344142, y: 0, z: 0, w: 0.9007132}
   m_LocalPosition: {x: 0, y: 31.45, z: -25.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1098405870}
   m_Father: {fileID: 0}
@@ -352,7 +349,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -17.66, y: 1, z: -1.67}
   m_LocalScale: {x: 10.97646, y: 2, z: 20.59759}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 250683083}
   m_RootOrder: 2
@@ -381,7 +377,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -451,7 +446,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 65420247}
   - {fileID: 322931591}
@@ -487,7 +481,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.2}
   m_LocalScale: {x: 0.8, y: 1, z: 0.8}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 892639023}
   - {fileID: 1335936828}
@@ -541,7 +534,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.57, y: 1, z: 11.84}
   m_LocalScale: {x: 10.97646, y: 2, z: 9.739734}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 250683083}
   m_RootOrder: 1
@@ -570,7 +562,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -635,11 +626,15 @@ Transform:
   m_LocalRotation: {x: 0.4344142, y: 0, z: 0, w: 0.9007132}
   m_LocalPosition: {x: 0, y: 31.45, z: -25.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 10, y: -11.783, z: 0}
+--- !u!82 &373041459 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3104067956758223914, guid: 673e868fdd8eab74e9b138f12fcaf789, type: 3}
+  m_PrefabInstance: {fileID: 4473206020293099215}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &556531976 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5899754630678087712, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
@@ -686,6 +681,14 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 2155506074053701647, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
+    - target: {fileID: 2369981035903857580, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
+      propertyPath: source
+      value: 
+      objectReference: {fileID: 373041459}
+    - target: {fileID: 2605383758232301800, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
+      propertyPath: source
+      value: 
+      objectReference: {fileID: 373041459}
     - target: {fileID: 2700879258433986862, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -859,9 +862,13 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6530837834326252156, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
+      propertyPath: source
+      value: 
+      objectReference: {fileID: 373041459}
+    - target: {fileID: 6530837834326252156, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 6530837834326252156, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6614357558145752768, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -870,6 +877,10 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6636764268210368710, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
+    - target: {fileID: 6800693524496514625, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
+      propertyPath: source
+      value: 
+      objectReference: {fileID: 373041459}
     - target: {fileID: 7400486334112845983, guid: 4f50b9847d1210841bead5dc85663f8d, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -1026,7 +1037,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 309868161}
   m_Father: {fileID: 0}
@@ -1058,7 +1068,6 @@ Transform:
   m_LocalRotation: {x: 0.37668264, y: 0, z: 0, w: 0.92634237}
   m_LocalPosition: {x: 0, y: 19.4, z: -19.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1092,7 +1101,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.6, y: 1, z: -15.32}
   m_LocalScale: {x: 35.36067, y: 2, z: 9.245434}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 250683083}
   m_RootOrder: 4
@@ -1121,7 +1129,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -1233,7 +1240,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -1278,7 +1284,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1872770017}
   m_RootOrder: 0
@@ -1342,7 +1347,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -1518,7 +1522,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
@@ -1570,7 +1573,6 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1612,7 +1614,6 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 11.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -2067,7 +2068,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.59, y: 1, z: -1.67}
   m_LocalScale: {x: 10.97646, y: 2, z: 20.59759}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 250683083}
   m_RootOrder: 3
@@ -2096,7 +2096,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2183,7 +2182,6 @@ Transform:
   m_LocalRotation: {x: 0.43441424, y: 0, z: 0, w: 0.9007132}
   m_LocalPosition: {x: -0.11, y: 0, z: 12.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 865246310}
   m_Father: {fileID: 0}
@@ -3075,6 +3073,10 @@ PrefabInstance:
       propertyPath: sharedContext.player
       value: 
       objectReference: {fileID: 1872770018}
+    - target: {fileID: 7571109232671989434, guid: 74cf0ccb96d3766409ba49a9ada1c8c0, type: 3}
+      propertyPath: sharedContext.source
+      value: 
+      objectReference: {fileID: 373041459}
     - target: {fileID: 7571109232671989434, guid: 74cf0ccb96d3766409ba49a9ada1c8c0, type: 3}
       propertyPath: sharedContext.settings
       value: 
