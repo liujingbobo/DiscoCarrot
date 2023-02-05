@@ -9,6 +9,8 @@ public class S_Hoe : MonoBehaviour, IState
     private bool downPressed = false;
     private int MaxSampleTime;
     private int ExpectSample;
+    private PressLevel firstLevel;
+    private bool block = false;
     
     public void Enter()
     {
@@ -24,10 +26,13 @@ public class S_Hoe : MonoBehaviour, IState
         downPressed = false;
         MaxSampleTime = 0;
         ExpectSample = 0;
+        block = false;
     }
 
     public void UpdateState()
     {
+        if (block) return;
+        
         var allValidKeyDown = K.GetAllValidKeyDown();
 
         if (allValidKeyDown.Count > 0)
@@ -50,6 +55,8 @@ public class S_Hoe : MonoBehaviour, IState
                     G.Indicator.UpdateState(ArrowState.Perfect);
                     MaxSampleTime = K.GetMaxSampleTime(K.GetClosestDownBeatEvent(), 1);
                     ExpectSample =(int) (K.GetClosestDownBeatEvent().EndSample + K.SamplePerBeat * 1);
+                    firstLevel = level;
+                    GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.PlowUp);
                 }
             }else if (downPressed)
             {
@@ -65,8 +72,16 @@ public class S_Hoe : MonoBehaviour, IState
                     else
                     {
                         // Success
-                        G.Indicator.UpdateState(ArrowState.Perfect);
-                        G.StateMachine.Success(ActionLevel.Perfect);
+                        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.PlowDown);
+                        G.Indicator.UpdateState(level.ToArrowState());
+                        var actionLevel = (firstLevel, level) switch
+                        {
+                            (PressLevel.Perfect, PressLevel.Perfect) => ActionLevel.Perfect,
+                            _ => ActionLevel.Good
+                        };
+                        G.Indicator.Present(actionLevel);
+                        block = true;
+                        StartCoroutine(Success(actionLevel));
                     }
                 }
                 else
@@ -83,5 +98,12 @@ public class S_Hoe : MonoBehaviour, IState
             // Failed
             G.StateMachine.Fail();
         }
+    }
+
+    IEnumerator Success(ActionLevel level)
+    {
+        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
+        G.StateMachine.Success(level);
+        block = false;
     }
 }

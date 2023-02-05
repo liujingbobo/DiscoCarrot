@@ -8,6 +8,8 @@ public class S_Water : MonoBehaviour, IState
     private bool downPressed = false;
     private int ExpectFinalSampleTime;
     private int MaxSampleTime;
+    private bool block;
+    private PressLevel firstLevel;
     public void Enter()
     {
         Reset();
@@ -22,10 +24,12 @@ public class S_Water : MonoBehaviour, IState
         downPressed = false;
         ExpectFinalSampleTime = 0;
         MaxSampleTime = int.MaxValue;
+        block = false;
     }
 
     public void UpdateState()
     {
+        if (block) return;
         if (!downPressed)
         {
             var allValidKeyDown = K.GetAllValidKeyDown();
@@ -45,9 +49,11 @@ public class S_Water : MonoBehaviour, IState
                     }
                     else
                     {
+                        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Watering);
                         downPressed = true;
-                        ExpectFinalSampleTime = kEvent.EndSample + ( 2 * (int)K.SamplePerBeat);
-                        MaxSampleTime = K.GetMaxSampleTime(kEvent, 2);
+                        ExpectFinalSampleTime = kEvent.EndSample + (int)( 1.5 * K.SamplePerBeat);
+                        MaxSampleTime = K.GetMaxSampleTime(kEvent, 1.5f);
+                        firstLevel = level;
                         // UpdateResult
                         G.Indicator.UpdateState(level.ToArrowState());
                     }
@@ -79,7 +85,14 @@ public class S_Water : MonoBehaviour, IState
                     {
                         // Success
                         G.Indicator.UpdateState(level.ToArrowState());
-                        G.StateMachine.Success(ActionLevel.Perfect);
+                        var l = (firstLevel, level) switch
+                        {
+                            (PressLevel.Perfect, PressLevel.Perfect) => ActionLevel.Perfect,
+                            _ => ActionLevel.Good
+                        };
+                        block = true;
+                        G.Indicator.Present(l);
+                        StartCoroutine(Success(l));
                     }
                 }
                 else
@@ -96,5 +109,12 @@ public class S_Water : MonoBehaviour, IState
             // Failed
             G.StateMachine.Fail();
         }
+    }
+
+    IEnumerator Success(ActionLevel level)
+    {
+        yield return new WaitForSeconds(0.5f * (float) (60 / K.BeatsPerMinute));
+        G.StateMachine.Success(level);
+        block = false;
     }
 }

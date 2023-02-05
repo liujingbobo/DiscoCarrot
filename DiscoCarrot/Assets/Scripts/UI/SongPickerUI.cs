@@ -2,78 +2,43 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using SonicBloom.Koreo;
+using SonicBloom.Koreo.Players;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SongPickerUI : SerializedMonoBehaviour
 {
-    public struct SongData
+    public Koreography MagicKoreo;
+    public Koreography TLTKoreo;
+    public Koreography BLKoreo;
+
+    public Koreography MenuMusic;
+
+    private void OnEnable()
     {
-        public int BPM;
-        public Sprite Cover;
-        public string SongName;
-        public string Singer;
-        public Difficulty difficulty;
+        K.musicPlayer.LoadSong(MenuMusic);
+        K.musicPlayer.Play();
     }
 
-    public List<SongData> Datas;
-
-    public List<GameObject> Thumbnails;
-
-    public int pivot;
-
-    public Text BPMText;
-    public Text SongName;
-    public Text Singer;
-    
-
-    public Dictionary<Difficulty, GameObject> DifficultyStars;
-
-    public SongData CurrentSongData => Datas[pivot];
-    
-    public void Reset()
+    public void PickMagic()
     {
-        pivot = 0;
-        for (int i = 0; i < Thumbnails.Count; i++)
-        {
-            int index = pivot + i % Thumbnails.Count;
-            // if (Thumbnails[index].GetComponentInChildren<IUIThumbnail<SongData>>() is {})
-        }
+        K.musicPlayer.Stop();
+        K.musicPlayer.LoadSong(MagicKoreo);
+        GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameReadyStart);
     }
 
-    public void MoveNext()
+    public void PickTLT()
     {
-        pivot++;
-        pivot = pivot % Thumbnails.Count;
-        Refresh();
+        K.musicPlayer.Stop();
+        K.musicPlayer.LoadSong(TLTKoreo);
+        GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameReadyStart);
     }
 
-    public void MovePrevious()
+    public void PickBL()
     {
-        pivot--;
-        pivot = pivot % Thumbnails.Count;
-        Refresh();
-    }
-
-    public void Refresh()
-    {
-        Singer.text = CurrentSongData.Singer;
-        BPMText.text = CurrentSongData.BPM.ToString();
-        SongName.text = CurrentSongData.SongName;
-
-        DifficultyStars[Difficulty.Normal].SetActive(CurrentSongData.difficulty == Difficulty.Normal);
-        DifficultyStars[Difficulty.Hard].SetActive(CurrentSongData.difficulty == Difficulty.Hard);
-        DifficultyStars[Difficulty.Hell].SetActive(CurrentSongData.difficulty == Difficulty.Hell);
-
-        
-    
-
-
-
-    }
-
-    public void Pick()
-    {
-        GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameRunning);
+        K.musicPlayer.Stop();
+        K.musicPlayer.LoadSong(BLKoreo);
+        GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameReadyStart);
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class S_Plant : MonoBehaviour, IState
 {
+    private bool block = false;
     public void Enter()
     {
         G.Indicator.SwitchTo(PlayerFarmAction.PlantSeed);
@@ -20,6 +21,7 @@ public class S_Plant : MonoBehaviour, IState
 
     public void UpdateState()
     {
+        if (block) return;
         var allValidKeyDown = K.GetAllValidKeyDown();
 
         if (allValidKeyDown.Count > 0)
@@ -38,7 +40,14 @@ public class S_Plant : MonoBehaviour, IState
                     // Success
                     // GameEvents.OnFarmActionDone.Invoke();
                     G.Indicator.UpdateState(ArrowState.Perfect);
-                    G.StateMachine.Success(ActionLevel.Perfect);
+                    var l = level switch
+                    {
+                        PressLevel.Perfect => ActionLevel.Perfect,
+                        PressLevel.Good => ActionLevel.Good
+                    };
+                    G.Indicator.Present(l);
+                    block = true;
+                    StartCoroutine(Success(l));
                 }
             }else
             {
@@ -46,5 +55,12 @@ public class S_Plant : MonoBehaviour, IState
                 G.StateMachine.Fail();
             }
         }
+    }
+    
+    IEnumerator Success(ActionLevel level)
+    {
+        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
+        G.StateMachine.Success(level);
+        block = false;
     }
 }

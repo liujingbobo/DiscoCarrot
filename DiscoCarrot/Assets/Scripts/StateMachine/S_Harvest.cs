@@ -8,6 +8,8 @@ public class S_Harvest : MonoBehaviour, IState
     private int phase;
     private int MaxSampleTime;
     private int expectNext;
+    private bool allPerfect;
+    private bool block;
     public void Enter()
     {
         Reset();
@@ -25,6 +27,8 @@ public class S_Harvest : MonoBehaviour, IState
 
     public void UpdateState()
     {
+        if (block) return;
+        
         var isEven = phase % 2 == 0;
 
         if (isEven)
@@ -44,6 +48,8 @@ public class S_Harvest : MonoBehaviour, IState
                     }
                     else
                     {
+                        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Harvest0);
+                        if (phase == 0) allPerfect = true;
                         expectNext = K.GetClosestDownBeatEvent().EndSample + (int) (K.SamplePerBeat * 0.5f);
                         phase++;
                         // Update UI
@@ -77,15 +83,18 @@ public class S_Harvest : MonoBehaviour, IState
                         if (phase == 7)
                         {
                             // success
+                            GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Harvest1);
                             G.Indicator.UpdateState(level.ToArrowState());
-                            G.StateMachine.Success(ActionLevel.Perfect);
+                            StartCoroutine(Success(allPerfect ? ActionLevel.Perfect : ActionLevel.Good));
+                            return;
                         }
                         else
                         {
+                            GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Harvest0);
                             expectNext = K.GetClosestUpBeatEvent().EndSample + (int) (K.SamplePerBeat * 0.5f);
                             phase++;
                             // Update UI
-                            G.Indicator.UpdateState(ArrowState.Perfect);
+                            G.Indicator.UpdateState(level.ToArrowState());
                         }
                     }
                 }
@@ -103,4 +112,11 @@ public class S_Harvest : MonoBehaviour, IState
             G.StateMachine.Fail();
         }
     }
+    IEnumerator Success(ActionLevel level)
+    {
+        yield return new WaitForSeconds(K.SampleTimeToTime((int) K.SamplePerBeat));
+        G.StateMachine.Success(level);
+        block = false;
+    }
+    
 }
