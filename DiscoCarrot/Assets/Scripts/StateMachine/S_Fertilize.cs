@@ -48,6 +48,7 @@ public class S_Fertilize : MonoBehaviour, IState
                     }
                     else
                     {
+                        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.ReadyFertilize);
                         downPressed = true;
                         expectedSampleTime = kEvent.EndSample + (int)(0.5 * K.SamplePerBeat);
                         maxSampleTime = K.GetMaxSampleTime(kEvent, 0.5f);
@@ -79,6 +80,7 @@ public class S_Fertilize : MonoBehaviour, IState
                     {
                         // Success
                         // GameEvents.OnFarmActionDone.Invoke();
+                        GameManager.singleton.sharedContext.player.SwitchToAnimState(PlayerAnimName.Fertilize);
                         G.Indicator.UpdateState(level.ToArrowState());
                         var l = (firstLevel, level) switch
                         {

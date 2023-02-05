@@ -1,0 +1,5 @@
+蘑菇5.png
+size:520,520
+pma:true
+Mushroom-5
+bounds:4,107,511,408
