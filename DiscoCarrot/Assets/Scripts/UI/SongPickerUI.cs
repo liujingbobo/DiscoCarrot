@@ -16,13 +16,14 @@ public class SongPickerUI : SerializedMonoBehaviour
     public Koreography MenuMusic;
 
     public AudioSource source;
-    
-    public AudioClip clip;
-    
+
     private void OnEnable()
     {
-        source.clip = clip;
-        source.Play();
+        if (!source.isPlaying)
+        {
+            source.Play();
+        }
+        
     }
 
     public void PickMagic()
