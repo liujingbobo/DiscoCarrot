@@ -29,7 +29,7 @@ public class SongPickerUI : SerializedMonoBehaviour
     {
         source.volume = 0.8f;
         K.musicPlayer.Stop();
-        GameManager.singleton.sharedContext.runTimeValues.pickedSongKore = MagicKoreo;
+        GameManager.singleton.sharedContext.pickedSongKore = MagicKoreo;
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameCutScene);
     }
 
@@ -37,7 +37,7 @@ public class SongPickerUI : SerializedMonoBehaviour
     {
         source.volume = 0.8f;
         K.musicPlayer.Stop();
-        GameManager.singleton.sharedContext.runTimeValues.pickedSongKore = TLTKoreo;
+        GameManager.singleton.sharedContext.pickedSongKore = TLTKoreo;
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameCutScene);
     }
 
@@ -45,7 +45,7 @@ public class SongPickerUI : SerializedMonoBehaviour
     {
         source.volume = 0.8f;
         K.musicPlayer.Stop();
-        GameManager.singleton.sharedContext.runTimeValues.pickedSongKore = BLKoreo;
+        GameManager.singleton.sharedContext.pickedSongKore = BLKoreo;
         GameManager.singleton.stateMachine.SwitchToState(GameManager.GameLoopState.GameCutScene);
     }
 }

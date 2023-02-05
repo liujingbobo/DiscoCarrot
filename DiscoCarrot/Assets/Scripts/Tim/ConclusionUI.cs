@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -27,7 +28,14 @@ public class ConclusionUI : MonoBehaviour
         againButton.transform.localScale = Vector3.zero;
         homeButton.transform.localScale = Vector3.zero;
     }
-    
+
+    private void Update()
+    {
+        totalScoreText.text = recordTotalScore.ToString();
+    }
+
+    private int[] recordScores = new int[5];
+    private int recordTotalScore = 0;
     [ContextMenu("testOpenConclusionUI")]
     public void OpenConclusionUI()
     {
@@ -50,20 +58,40 @@ public class ConclusionUI : MonoBehaviour
         carrotAndMissCountTexts[3].text = count3.ToString();
         carrotAndMissCountTexts[4].text = count4.ToString();
 
-        var score0 = (context.runTimeValues.harvestedCarrots[0] * Config.GetScoreByCarrotLevel(CarrotLevel.Disco));
-        var score1 = (context.runTimeValues.harvestedCarrots[1] * Config.GetScoreByCarrotLevel(CarrotLevel.Muscle));
-        var score2 = (context.runTimeValues.harvestedCarrots[2] * Config.GetScoreByCarrotLevel(CarrotLevel.Normal));
-        var score3 = (context.runTimeValues.harvestedCarrots[3] * Config.GetScoreByCarrotLevel(CarrotLevel.Bad));
-        var score4 = (context.runTimeValues.missedCount * Config.MISSED_DEDUCT_SCORE);
-        carrotAndMissScoreTexts[0].text = score0.ToString();
-        carrotAndMissScoreTexts[1].text = score1.ToString();
-        carrotAndMissScoreTexts[2].text = score2.ToString();
-        carrotAndMissScoreTexts[3].text = score3.ToString();
-        carrotAndMissScoreTexts[4].text = score4.ToString();
+        for (int i = 0; i < recordScores.Length; i++)
+        {
+            recordScores[i] = 0;
+        }
 
+        int[] tmpScore = new int[5];
+        tmpScore[0] = (count0 * Config.GetScoreByCarrotLevel(CarrotLevel.Disco));
+        tmpScore[1] = (count1 * Config.GetScoreByCarrotLevel(CarrotLevel.Muscle));
+        tmpScore[2] = (count2 * Config.GetScoreByCarrotLevel(CarrotLevel.Normal));
+        tmpScore[3] = (count3 * Config.GetScoreByCarrotLevel(CarrotLevel.Bad));
+        tmpScore[4] = (context.runTimeValues.missedCount * Config.MISSED_DEDUCT_SCORE);
+        carrotAndMissScoreTexts[0].text = tmpScore[0].ToString();
+        carrotAndMissScoreTexts[1].text = tmpScore[1].ToString();
+        carrotAndMissScoreTexts[2].text = tmpScore[2].ToString();
+        carrotAndMissScoreTexts[3].text = tmpScore[3].ToString();
+        carrotAndMissScoreTexts[4].text = tmpScore[4].ToString();
+
+        float secondTmp = 0;
+        //added counting up effect
+        /*for (int i = 0; i < recordScores.Length; i++)
+        {
+            DOTween.To(() => recordScores[i], x => recordScores[i] = x, tmpScore[i], 1);
+            Debug.Log($"Timtes {recordScores[i]} {tmpScore[i]}");
+        }
+        secondTmp += 1;*/
+        
         //calculate Harvested Carrot Score
-        var totalScore = score0 + score1 + score2 + score3 + score4;
-        totalScoreText.text = totalScore.ToString();
+        totalScoreText.text = 0.ToString();
+        recordTotalScore = 0;
+        var totalScore = tmpScore[0] + tmpScore[1] + tmpScore[2] + tmpScore[3] + tmpScore[4];
+        //show count up score
+        DOTween.Sequence().AppendInterval(secondTmp)
+            .Append(DOTween.To(() => recordTotalScore, x => recordTotalScore = x, totalScore, 1));
+        secondTmp += 1;
         
         //calculate grade
         var grade = Config.GetGradeFromTotalScore(totalScore);
@@ -90,7 +118,7 @@ public class ConclusionUI : MonoBehaviour
         //star1
         if (grade >= 1)
         {
-            DOTween.Sequence().AppendInterval(1)
+            DOTween.Sequence().AppendInterval(secondTmp)
                 .AppendCallback(() =>
                 {
                     CarrotBarImages[0].sprite = carrotSprites[1];
@@ -99,11 +127,12 @@ public class ConclusionUI : MonoBehaviour
                 })
                 .Append(StarImages[0].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic))
                 .Append(StarImages[1].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic));
+            secondTmp += 0.5f;
         }
         //star2
         if (grade >= 2)
         {
-            DOTween.Sequence().AppendInterval(2)
+            DOTween.Sequence().AppendInterval(secondTmp)
                 .AppendCallback(() =>
                 {
                     CarrotBarImages[1].sprite = carrotSprites[1];
@@ -112,11 +141,12 @@ public class ConclusionUI : MonoBehaviour
                 })
                 .Append(StarImages[2].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic))
                 .Append(StarImages[3].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic));
+            secondTmp += 0.5f;
         }
         //star3
         if (grade >= 3)
         {
-            DOTween.Sequence().AppendInterval(3)
+            DOTween.Sequence().AppendInterval(secondTmp)
                 .AppendCallback(() =>
                 {
                     CarrotBarImages[2].sprite = carrotSprites[1];
@@ -125,9 +155,10 @@ public class ConclusionUI : MonoBehaviour
                 })
                 .Append(StarImages[4].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic))
                 .Append(StarImages[5].transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic));
+            secondTmp += 0.5f;
         }
 
-        DOTween.Sequence().AppendInterval(4).AppendCallback(() =>
+        DOTween.Sequence().AppendInterval(secondTmp).AppendCallback(() =>
         {
             againButton.transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic);
             homeButton.transform.DOScale(1, 0.8f).SetEase(Ease.InOutElastic);

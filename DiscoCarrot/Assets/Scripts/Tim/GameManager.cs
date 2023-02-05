@@ -24,13 +24,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         stateMachine.sharedContext = sharedContext;
-        stateMachine.AddStateInstance(GameLoopState.Logo, new LogoSimpleState(), true);
-        stateMachine.AddStateInstance(GameLoopState.SongPicker, new SongPickerState(), true);
-        stateMachine.AddStateInstance(GameLoopState.GameCutScene, new GameCutSceneState(), true);
-        stateMachine.AddStateInstance(GameLoopState.GameReadyStart, new GameReadyStartState(), true);
-        stateMachine.AddStateInstance(GameLoopState.GameRunning, new GameRunningState(), true);
-        stateMachine.AddStateInstance(GameLoopState.GameEnd, new GameEndState(), true);
-        stateMachine.AddStateInstance(GameLoopState.Conclusion, new ConclusionState(), true);
+        stateMachine.AddStateInstance(GameLoopState.Logo, new LogoSimpleState());
+        stateMachine.AddStateInstance(GameLoopState.SongPicker, new SongPickerState());
+        stateMachine.AddStateInstance(GameLoopState.GameCutScene, new GameCutSceneState());
+        stateMachine.AddStateInstance(GameLoopState.GameReadyStart, new GameReadyStartState());
+        stateMachine.AddStateInstance(GameLoopState.GameRunning, new GameRunningState());
+        stateMachine.AddStateInstance(GameLoopState.GameEnd, new GameEndState());
+        stateMachine.AddStateInstance(GameLoopState.Conclusion, new ConclusionState());
         
         stateMachine.SwitchToState(GameLoopState.Logo);
     }
@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
         
         //song picker
         public GameObject pickSongCanvas;
+        public Koreography pickedSongKore;
         
         //GameCutScene
         public Canvas cutSceneCanvas;
@@ -88,7 +89,6 @@ public class GameManager : MonoBehaviour
     {
         public int[] harvestedCarrots = new int[4];
         public int missedCount = 0;
-        public Koreography pickedSongKore;
 
 
 
@@ -199,8 +199,7 @@ public class GameManager : MonoBehaviour
             base.EnterState();
             //play song
             K.musicPlayer.Stop();
-            K.musicPlayer.LoadSong(stateMachine.sharedContext.runTimeValues.pickedSongKore);
-
+            K.musicPlayer.LoadSong(stateMachine.sharedContext.pickedSongKore);
             
             //ResetEverything
             stateMachine.sharedContext.player.ResetPlayer();
@@ -228,7 +227,7 @@ public class GameManager : MonoBehaviour
             
             Koreographer.Instance.ClearEventRegister();
 
-            GameManager.singleton.sharedContext.source.Stop();
+            singleton.sharedContext.source.Stop();
             K.musicPlayer.Play();
 
             Koreographer.Instance.RegisterForEvents("Ready", DoReady);
@@ -281,20 +280,10 @@ public class GameManager : MonoBehaviour
                 SwitchToState(GameLoopState.GameEnd);
             });
             
-            
             GameEvents.OnReachedFarmTile += OnReachedFarmTile;
             GameEvents.OnLeaveFarmTile += OnLeaveFarmTile;
             GameEvents.OnHarvestCarrot += OnHarvestCarrot;
             stateMachine.sharedContext.player.SetPlayerMovable(true);
-            
-            
-            
-            //TODO Test Code
-            DOTween.Sequence().AppendInterval(10).AppendCallback(() =>
-            {
-                SwitchToState(GameLoopState.GameEnd);
-            });
-
         }
         
         public override void ExitState()
@@ -333,6 +322,8 @@ public class GameManager : MonoBehaviour
             //set text tween
             stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
             stateMachine.sharedContext.endTextImage.color = Color.white;
+            //reset
+            stateMachine.sharedContext.indicator.Reset();
 
             Koreographer.Instance.ClearEventRegister();
             
