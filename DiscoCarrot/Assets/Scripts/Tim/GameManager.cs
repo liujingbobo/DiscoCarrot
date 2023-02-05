@@ -162,6 +162,7 @@ public class GameManager : MonoBehaviour
             
             //reset metronome
             stateMachine.sharedContext.carrotMetronome.Reset();
+            stateMachine.sharedContext.carrotMetronome.ShowMetronomePanel();
             stateMachine.sharedContext.carrotMetronome.ConfigMetronome((float) K.BeatsPerMinute);
             
             Koreographer.Instance.ClearEventRegister();

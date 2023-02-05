@@ -7,13 +7,17 @@ using UnityEngine.UI;
 
 public class CarrotMetronome : MonoBehaviour
 {
+    public Image CarrotImage;
+    public Vector3 CarrotPunchScale = Vector3.one;
     public RectTransform leftStartPos;
     public RectTransform rightStartPos;
     public RectTransform centerEndPos;
     public List<RectTransform> DownBeats;
     public List<RectTransform> UpBeats;
-    public RectTransform notesContainer;
+    public RectTransform metronomePanel;
 
+    public RectTransform hidePosRectTransform;
+    public RectTransform showPosRectTransform;
     //config values
     public int maxNotesOnScreen = 4;
     public float reachCenterTime = 1;
@@ -22,27 +26,39 @@ public class CarrotMetronome : MonoBehaviour
 
     private Coroutine DownBeatCoroutine;
     private Coroutine UpBeatCoroutine;
-
+    private Tweener pumpTweener;
+    
     private void Start()
     {
         RegisterBeatEvent();
     }
 
+    public void ShowMetronomePanel()
+    {
+        metronomePanel.DOMove(showPosRectTransform.position, 2).SetEase(Ease.Linear);
+    }
+    public void HideMetronomePanel()
+    {
+        metronomePanel.DOMove(hidePosRectTransform.position, 0.5f).SetEase(Ease.Linear);
+
+    }
     public void RegisterBeatEvent()
     {
         GameEvents.OnDownBeat += OnDownBeat;
         GameEvents.OnUpBeat += OnUpBeat;
     }
 
-    //!!!!!!!!! TODO: SendUpBeat and SendDownBeat purposely exchanged, dont know why it doesnt work, just let it be for now
     private void OnDownBeat()
     {
-        SendUpBeat();
+        SendDownBeat();
+        if(pumpTweener != null) pumpTweener.Kill();
+        CarrotImage.transform.localScale = Vector3.one;
+        pumpTweener = CarrotImage.transform.DOPunchScale(CarrotPunchScale, 0.1f);
     }
 
     private void OnUpBeat()
     {
-        SendDownBeat();
+        SendUpBeat();
     }
 
     [ContextMenu("test")]
@@ -59,6 +75,7 @@ public class CarrotMetronome : MonoBehaviour
     
     public void Reset()
     {
+        metronomePanel.position = hidePosRectTransform.position;
         foreach (var note in DownBeats)
         {
             note.gameObject.SetActive(false);
