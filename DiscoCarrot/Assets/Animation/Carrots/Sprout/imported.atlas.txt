@@ -1,0 +1,16 @@
+imported.png
+size:354,149
+filter:Linear,Linear
+pma:true
+Sapling leaves
+bounds:190,50,97,75
+offsets:0,0,105,75
+rotate:90
+SaplingBody
+bounds:2,2,145,186
+rotate:90
+SaplingLeftHand
+bounds:267,2,72,67
+rotate:90
+SaplingRigh Hand
+bounds:267,76,85,71

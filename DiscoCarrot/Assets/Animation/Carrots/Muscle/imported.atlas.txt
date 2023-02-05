@@ -1,0 +1,33 @@
+imported.png
+size:241,470
+filter:Linear,Linear
+pma:true
+MuscleRadishBigleaves
+bounds:128,2,112,110
+rotate:90
+MuscleRadishBody
+bounds:2,222,183,246
+MuscleRadishEye
+bounds:219,309,54,20
+rotate:90
+MuscleRadishLeft LowerArm
+bounds:2,146,136,74
+MuscleRadishLeft UpperArm
+bounds:140,116,92,104
+MuscleRadishLeftLeg
+bounds:187,365,21,45
+rotate:90
+MuscleRadishMouth
+bounds:187,298,65,30
+rotate:90
+MuscleRadishRightLeg
+bounds:187,239,25,57
+MuscleRadishRightLowerArm
+bounds:2,81,124,63
+MuscleRadishRightUpperArm
+bounds:2,2,77,101
+rotate:90
+MuscleRadishSmallLleaves
+bounds:187,388,80,50
+offsets:20,0,107,56
+rotate:90

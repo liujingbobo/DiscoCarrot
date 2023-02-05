@@ -1,0 +1,37 @@
+Disco.png
+size:253,529
+filter:Linear,Linear
+pma:true
+Body
+bounds:2,2,111,119
+Head
+bounds:2,234,158,131
+Leaves1
+bounds:2,123,143,109
+Leaves2
+bounds:115,5,78,79
+Leaves3
+bounds:181,218,71,65
+rotate:90
+Leaves4
+bounds:195,291,55,84
+Left Hand
+bounds:147,86,82,104
+rotate:90
+Left Leg
+bounds:162,225,17,68
+offsets:20,0,37,68
+Mouth
+bounds:162,295,70,25
+rotate:90
+Radios
+bounds:2,367,191,160
+Right Hand
+bounds:195,9,55,75
+offsets:0,6,55,81
+Right Leg
+bounds:147,170,13,62
+Sunglasses
+bounds:195,377,150,52
+offsets:0,0,150,85
+rotate:90

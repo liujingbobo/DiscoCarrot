@@ -217,7 +217,9 @@ public class GameManager : MonoBehaviour
                 SwitchToState(GameLoopState.GameEnd);
             });
             
-            // stateMachine.sharedContext.harvestedCarrots = new List<int>(4);
+            
+            GameEvents.OnReachedFarmTile += OnReachedFarmTile;
+            GameEvents.OnLeaveFarmTile += OnLeaveFarmTile;
             GameEvents.OnHarvestCarrot += OnHarvestCarrot;
             stateMachine.sharedContext.player.SetPlayerMovable(true);
         }
@@ -225,10 +227,24 @@ public class GameManager : MonoBehaviour
         public override void ExitState()
         {
             base.ExitState();
+            GameEvents.OnReachedFarmTile -= OnReachedFarmTile;
+            GameEvents.OnLeaveFarmTile -= OnLeaveFarmTile;
             GameEvents.OnHarvestCarrot -= OnHarvestCarrot;
             stateMachine.sharedContext.player.SetPlayerMovable(false);
         }
 
+        private void OnReachedFarmTile(FarmTile arg1, PlayerFarmAction arg2)
+        {
+            stateMachine.sharedContext.player.CurTile = arg1;
+            Debug.Log($"OnReachedFarmTile, detected need action {arg2}");
+        }
+        private void OnLeaveFarmTile(FarmTile obj)
+        {
+            if (stateMachine.sharedContext.player.CurTile == obj)
+                stateMachine.sharedContext.player.CurTile = null;
+            Debug.Log($"OnLeaveFarmTile");
+        }
+        
         public void OnHarvestCarrot(CarrotLevel level)
         {
             stateMachine.sharedContext.runTimeValues.harvestedCarrots[(int) level] += 1;

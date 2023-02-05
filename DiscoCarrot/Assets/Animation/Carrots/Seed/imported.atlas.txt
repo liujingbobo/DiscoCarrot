@@ -1,0 +1,6 @@
+imported.png
+size:145,109
+filter:Linear,Linear
+pma:true
+seed
+bounds:2,2,141,105
