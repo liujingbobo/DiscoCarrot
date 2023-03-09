@@ -1,13 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
-
-public enum Difficulty
-{
-    Normal,
-    Hard,
-    Hell
-}
 
 public enum CarrotLevel
 {
@@ -97,8 +91,6 @@ public static class Config
         return 0;
     }
 }
-
-
 public enum PlayerAnimName
 {
     Idle,
@@ -114,7 +106,6 @@ public enum PlayerAnimName
     Harvest0,
     Harvest1,
 }
-
 public interface IState
 {
     void Enter();
@@ -122,12 +113,10 @@ public interface IState
     void Reset();
     void UpdateState();
 }
-
 public interface IUIThumbnail<T>
 {
     void FillWith(T target, params object[] extraInfos);
 }
-
 public enum ArrowState
 {
     Normal,
@@ -135,11 +124,33 @@ public enum ArrowState
     Good,
     Perfect
 }
-
 public interface IIndicator
 {
     void Init();
     void UpdateState(ArrowState state);
     void Exit();
     void Reset();
+}
+public enum BeatType
+{
+    Down, // The first beat of the bar
+    Up
+}
+public enum BeatActionType
+{
+    None,
+    Click, 
+    Hold
+}
+public enum ArrowDirection
+{
+    Up,
+    Right,
+    Down,
+    Left
+}
+public struct BeatAction
+{
+    public BeatActionType Action;
+    [HideIf("Action", BeatActionType.None)]public ArrowDirection Direction;
 }

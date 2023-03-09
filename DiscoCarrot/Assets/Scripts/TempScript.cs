@@ -8,10 +8,6 @@ using UnityEngine;
 
 public class TempScript : MonoBehaviour
 {
-    // public SimpleMusicPlayer p1;
-    // public SimpleMusicPlayer p12;
-    // public SimpleMusicPlayer p3sdr;
-
     public Koreography p1;
     public Koreography p12;
     public Koreography p3sdr;
