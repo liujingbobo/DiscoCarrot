@@ -25,33 +25,20 @@ public static class K
     }
     public static KoreographyEvent GetClosestDownBeatEvent()
     {
-        int min = CurrentSampleTime - SampleRate;
-        int max = CurrentSampleTime + SampleRate;
-
-        var validEvents = koreographer.GetAllEventsInRange(currentClip, G.Settings.DownBeatEvent, min, max);
-
-        int dis = int.MaxValue;
-        int minDisIndex = 0;
-        for(int i = 0; i < validEvents.Count; i++)
-        {
-            var eEvent = validEvents[i];
-            var d = Math.Abs(eEvent.StartSample - CurrentSampleTime);
-            if ( d <= dis)
-            {
-                dis = d;
-                minDisIndex = i;
-            }
-        }
-
-        return validEvents[minDisIndex];
+        return GetClosestEvent(G.Settings.DownBeatEvent);
     }
     public static KoreographyEvent GetClosestUpBeatEvent()
+    {
+        return GetClosestEvent(G.Settings.UpBeatEvent);
+    }
+
+    public static KoreographyEvent GetClosestEvent(string EventName)
     {
         int min = CurrentSampleTime - SampleRate;
         int max = CurrentSampleTime + SampleRate;
 
-        var validEvents = koreographer.GetAllEventsInRange(currentClip, G.Settings.UpBeatEvent, min, max);
-
+        var validEvents = koreographer.GetAllEventsInRange(currentClip, EventName, min, max);
+        
         int dis = int.MaxValue;
         int minDisIndex = 0;
         for(int i = 0; i < validEvents.Count; i++)
