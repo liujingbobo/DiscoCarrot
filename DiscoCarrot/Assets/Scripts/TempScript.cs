@@ -14,29 +14,29 @@ public class TempScript : MonoBehaviour
 
     public SimpleMusicPlayer player;
 
-    [Button]
-    public void PlayFirst()
-    {
-        player.LoadSong(p1);
-        player.Play();
-    }    
-    
-    [Button]
-    public void PlaySecond()
-    {
-        player.LoadSong(p12);
-        player.Play();
-    }    
-    
-    [Button]
-    public void PlayTh()
-    {
-        player.LoadSong(p3sdr);
-        player.Play();
-    }
-
-    private void Update()
-    {
-        print(        Koreographer.Instance.musicPlaybackController.GetCurrentClipName());
-    }
+    // [Button]
+    // public void PlayFirst()
+    // {
+    //     player.LoadSong(p1);
+    //     player.Play();
+    // }    
+    //
+    // [Button]
+    // public void PlaySecond()
+    // {
+    //     player.LoadSong(p12);
+    //     player.Play();
+    // }    
+    //
+    // [Button]
+    // public void PlayTh()
+    // {
+    //     player.LoadSong(p3sdr);
+    //     player.Play();
+    // }
+    //
+    // private void Update()
+    // {
+    //     print(        Koreographer.Instance.musicPlaybackController.GetCurrentClipName());
+    // }
 }

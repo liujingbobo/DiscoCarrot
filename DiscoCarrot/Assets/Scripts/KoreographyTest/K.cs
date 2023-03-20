@@ -14,14 +14,13 @@ public static class K
     public static string currentClip => musicPlayer.GetCurrentClipName();
     public static int CurrentSampleTime => koreographer.GetMusicSampleTime();
     public static int TotalSampleTime => musicPlayer.GetTotalSampleTimeForClip(currentClip);
-    public static int SampleRate => koreographer.GetMusicSampleRate();
+    public static int SampleRate => koreographer.GetMusicSampleRate(); // Sample/Seconds
     public static float SamplePerBeat => G.Settings.SamplesPerBeatForSong[currentClip];
     public static double BeatsPerMinute => koreographer.GetMusicBPM();
     public static float SamplePerSecond => SamplePerBeat * (float)BeatsPerMinute / 60;
     public static float SampleTimeToTime(int sampleTime)
     {
-        var temp = (float) sampleTime / SampleRate;
-        return temp;
+        return (float)sampleTime / SampleRate;
     }
     public static KoreographyEvent GetClosestDownBeatEvent()
     {
@@ -32,27 +31,52 @@ public static class K
         return GetClosestEvent(G.Settings.UpBeatEvent);
     }
 
-    public static KoreographyEvent GetClosestEvent(string EventName)
+    public static void LoadSong(Koreography kore)
     {
-        int min = CurrentSampleTime - SampleRate;
-        int max = CurrentSampleTime + SampleRate;
+        musicPlayer.LoadSong(kore);
+    }
+    
+    public static KoreographyEvent GetClosestEvent(string eventName)
+    {
+        var allEvents = koreographer.GetAllEvents(CurrentClip, eventName);
 
-        var validEvents = koreographer.GetAllEventsInRange(currentClip, EventName, min, max);
-        
-        int dis = int.MaxValue;
-        int minDisIndex = 0;
-        for(int i = 0; i < validEvents.Count; i++)
+        // Make sure the events are sorted by StartSample.
+        allEvents.Sort((e1, e2) => e1.StartSample.CompareTo(e2.StartSample));
+
+        int index = BinarySearchClosestEvent(allEvents, CurrentSampleTime);
+
+        return allEvents[index];
+    }
+    
+    
+    private static int BinarySearchClosestEvent(List<KoreographyEvent> events, int targetSampleTime)
+    {
+        int left = 0;
+        int right = events.Count - 1;
+
+        while (left < right)
         {
-            var eEvent = validEvents[i];
-            var d = Math.Abs(eEvent.StartSample - CurrentSampleTime);
-            if ( d <= dis)
+            int mid = left + (right - left) / 2;
+
+            if (events[mid].StartSample < targetSampleTime)
             {
-                dis = d;
-                minDisIndex = i;
+                left = mid + 1;
+            }
+            else
+            {
+                right = mid;
             }
         }
 
-        return validEvents[minDisIndex];
+        if (left == 0)
+        {
+            return 0;
+        }
+
+        int closestLeft = Math.Abs(events[left - 1].StartSample - targetSampleTime);
+        int closestRight = Math.Abs(events[left].StartSample - targetSampleTime);
+
+        return closestLeft <= closestRight ? left - 1 : left;
     }
     public static List<KeyCode> GetAllValidKeyDown()
     {
@@ -76,7 +100,6 @@ public static class K
         }
         return keys;
     }    
-    
     public static List<KeyCode> GetAllValidKeyUp()
     {
         List<KeyCode> keys = new List<KeyCode>();

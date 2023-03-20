@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
             base.EnterState();
             //play song
             K.musicPlayer.Stop();
-            K.musicPlayer.LoadSong(stateMachine.sharedContext.pickedSongKore);
+            K.LoadSong(stateMachine.sharedContext.pickedSongKore);
             
             //ResetEverything
             stateMachine.sharedContext.player.ResetPlayer();
