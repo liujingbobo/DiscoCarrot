@@ -38,14 +38,14 @@ public static class K
     
     public static KoreographyEvent GetClosestEvent(string eventName)
     {
-        var allEvents = koreographer.GetAllEvents(CurrentClip, eventName);
+        // var allEvents = koreographer.GetAllEvents(CurrentClip, eventName);
+        //
+        // // Make sure the events are sorted by StartSample.
+        // allEvents.Sort((e1, e2) => e1.StartSample.CompareTo(e2.StartSample));
+        //
+        // int index = BinarySearchClosestEvent(allEvents, CurrentSampleTime);
 
-        // Make sure the events are sorted by StartSample.
-        allEvents.Sort((e1, e2) => e1.StartSample.CompareTo(e2.StartSample));
-
-        int index = BinarySearchClosestEvent(allEvents, CurrentSampleTime);
-
-        return allEvents[index];
+        return default;
     }
     
     
