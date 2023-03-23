@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57962a719b4d74b4eb83f85182b5041d, type: 3}
+  m_Name: CropsDataObject_Corn
+  m_EditorClassIdentifier: 
+  growthNodes:
+  - stateName: Seed
+    presentationPrefab: {fileID: 8664008915910515700, guid: 41e10671055c0e04cabc0d2eeab8f40b, type: 3}
+    duration: 5
+    needs: 
+  - stateName: Sprout0
+    presentationPrefab: {fileID: 1141107744042344307, guid: ce7ac33a8803c914f9d4c440e8a79df0, type: 3}
+    duration: 5
+    needs: 
+  - stateName: Sprout1
+    presentationPrefab: {fileID: 1362603214671799652, guid: 2de58c88ed02d9a4d8212bcbcfb4b8f3, type: 3}
+    duration: 5
+    needs: 
+  - stateName: FullGrown
+    presentationPrefab: {fileID: 1872545755744782735, guid: 10601204c7d98dc4b84607d591bbf4b3, type: 3}
+    duration: 5
+    needs: 

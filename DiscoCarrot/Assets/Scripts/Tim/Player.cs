@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public float speed;
     public Vector3 startPosition;
     public bool isPlayerMovable = false;
+    public InteractionTrigger interactionActor;
     
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimationName;
@@ -55,27 +56,27 @@ public class Player : MonoBehaviour
         {
             case "feed": //SoundEffectManager.singleton.PlaySFX();
                 break;
-            case "harvest": SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.harvest);
+            case "harvest": SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.harvest);
                 break;
             case "hoeing": 
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.hoeing);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.playerHoar);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.hoeing);
                 break;
             case "insecticide": 
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.insecticide);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.playerHoar);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.insecticide);
                 break;
-            case "miss": SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.miss);
+            case "miss": SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.miss);
                 break;
-            case "move": SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.move);
+            case "move": SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.move);
                 break;
             case "sowing": 
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.plantSeed);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.playerHoar);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.plantSeed);
                 break;
             case "watering": 
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.playerHoar);
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.water);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.playerHoar);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.water);
                 break;
         }
     }
@@ -101,7 +102,34 @@ public class Player : MonoBehaviour
         SwitchToAnimState(PlayerAnimName.Idle);
         isPlayerMovable = movable;
     }
-    
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            var target = interactionActor.GetClosestInteractionTrigger();
+            if(target) target.Interact();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            var target = interactionActor.GetClosestInteractionTrigger().interactableClassInstance;
+            if (target is ModularFarmTile)
+            {
+                (target as ModularFarmTile).PlantSeed(0);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            var target = interactionActor.GetClosestInteractionTrigger().interactableClassInstance;
+            if(target is ModularFarmTile) (target as ModularFarmTile).PlantSeed(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            var target = interactionActor.GetClosestInteractionTrigger().interactableClassInstance;
+            if(target is ModularFarmTile) (target as ModularFarmTile).PlantSeed(2);
+        }
+    }
+
     private void FixedUpdate()
     {
         MovableStateUpdate();
@@ -132,7 +160,7 @@ public class Player : MonoBehaviour
             {
                 direction += Vector3.back;
             }
-
+            
             if (direction != Vector3.zero) cc.Move(direction * speed);
             else cc.Move(Vector3.zero);
 

@@ -13,8 +13,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager singleton;
     public GameManagerContext sharedContext = new GameManagerContext();
-    public SimpleStateMachine<GameLoopState, GameManagerContext> stateMachine =
-        new SimpleStateMachine<GameLoopState, GameManagerContext>();
+    public BasicStateMachine<GameLoopState, GameManagerContext> stateMachine =
+        new BasicStateMachine<GameLoopState, GameManagerContext>();
 
     private void Awake()
     {
@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        stateMachine.sharedContext = sharedContext;
-        stateMachine.AddStateInstance(GameLoopState.Logo, new LogoSimpleState());
+        stateMachine.context = sharedContext;
+        stateMachine.AddStateInstance(GameLoopState.Logo, new LogoBasicState());
         stateMachine.AddStateInstance(GameLoopState.SongPicker, new SongPickerState());
         stateMachine.AddStateInstance(GameLoopState.GameCutScene, new GameCutSceneState());
         stateMachine.AddStateInstance(GameLoopState.GameReadyStart, new GameReadyStartState());
@@ -110,25 +110,25 @@ public class GameManager : MonoBehaviour
         Conclusion,
     }
 
-    public class LogoSimpleState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    public class LogoBasicState : BasicStateInstance<GameLoopState, GameManagerContext>
     {
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.logoCanvas.gameObject.SetActive(true);
-            stateMachine.sharedContext.startButton.onClick.AddListener(OnButtonClick);
+            stateMachine.context.logoCanvas.gameObject.SetActive(true);
+            stateMachine.context.startButton.onClick.AddListener(OnButtonClick);
 
-            G.Settings = stateMachine.sharedContext.settings;
-            K.koreographer = stateMachine.sharedContext.koreographer;
-            K.musicPlayer = stateMachine.sharedContext.musicPlayer;
-            G.Indicator = stateMachine.sharedContext.indicator;
-            G.StateMachine = stateMachine.sharedContext.stateMachine;
+            G.Settings = stateMachine.context.settings;
+            K.koreographer = stateMachine.context.koreographer;
+            K.musicPlayer = stateMachine.context.musicPlayer;
+            G.Indicator = stateMachine.context.indicator;
+            G.StateMachine = stateMachine.context.stateMachine;
         }
         public override void ExitState()
         {
             base.ExitState();
-            stateMachine.sharedContext.logoCanvas.gameObject.SetActive(false);
-            stateMachine.sharedContext.startButton.onClick.RemoveListener(OnButtonClick);
+            stateMachine.context.logoCanvas.gameObject.SetActive(false);
+            stateMachine.context.startButton.onClick.RemoveListener(OnButtonClick);
         }
 
         void OnButtonClick()
@@ -136,34 +136,34 @@ public class GameManager : MonoBehaviour
             SwitchToState(GameLoopState.SongPicker);
         }
     }
-    public class SongPickerState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    public class SongPickerState : BasicStateInstance<GameLoopState, GameManagerContext>
     {
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.pickSongCanvas.SetActive(true);
+            stateMachine.context.pickSongCanvas.SetActive(true);
         }
         public override void ExitState()
         {
             base.ExitState();
-            stateMachine.sharedContext.pickSongCanvas.SetActive(false);
+            stateMachine.context.pickSongCanvas.SetActive(false);
         }
     }
-    public class GameCutSceneState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    public class GameCutSceneState : BasicStateInstance<GameLoopState, GameManagerContext>
     {
         private int currentPicIndex = 0;
         public override void EnterState()
         {
             base.EnterState();
             currentPicIndex = 0;
-            stateMachine.sharedContext.cutSceneCanvas.gameObject.SetActive(true);
-            stateMachine.sharedContext.cutSceneImages[currentPicIndex].gameObject.SetActive(true);
+            stateMachine.context.cutSceneCanvas.gameObject.SetActive(true);
+            stateMachine.context.cutSceneImages[currentPicIndex].gameObject.SetActive(true);
         }
 
         public override void StateUpdate()
         {
             base.StateUpdate();
-            if (currentPicIndex >= stateMachine.sharedContext.cutSceneImages.Length)
+            if (currentPicIndex >= stateMachine.context.cutSceneImages.Length)
             {
                 SwitchToState(GameLoopState.GameReadyStart);
             }
@@ -172,13 +172,13 @@ public class GameManager : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     currentPicIndex++;
-                    if (currentPicIndex < stateMachine.sharedContext.cutSceneImages.Length)
+                    if (currentPicIndex < stateMachine.context.cutSceneImages.Length)
                     {
-                        stateMachine.sharedContext.cutSceneImages[currentPicIndex].gameObject.SetActive(true);
+                        stateMachine.context.cutSceneImages[currentPicIndex].gameObject.SetActive(true);
                     }
-                    if (currentPicIndex == stateMachine.sharedContext.cutSceneImages.Length - 1)
+                    if (currentPicIndex == stateMachine.context.cutSceneImages.Length - 1)
                     {
-                        SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.door);
+                        SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.door);
                     }
                 }
             }
@@ -187,43 +187,43 @@ public class GameManager : MonoBehaviour
         public override void ExitState()
         {
             base.ExitState();
-            stateMachine.sharedContext.cutSceneImages[stateMachine.sharedContext.cutSceneImages.Length-1].gameObject.SetActive(true);
-            stateMachine.sharedContext.cutSceneCanvas.gameObject.SetActive(false);
+            stateMachine.context.cutSceneImages[stateMachine.context.cutSceneImages.Length-1].gameObject.SetActive(true);
+            stateMachine.context.cutSceneCanvas.gameObject.SetActive(false);
 
         }
     }
-    public class GameReadyStartState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    public class GameReadyStartState : BasicStateInstance<GameLoopState, GameManagerContext>
     {
         public override void EnterState()
         {
             base.EnterState();
             //play song
             K.musicPlayer.Stop();
-            K.musicPlayer.LoadSong(stateMachine.sharedContext.pickedSongKore);
+            K.musicPlayer.LoadSong(stateMachine.context.pickedSongKore);
             
             //ResetEverything
-            stateMachine.sharedContext.player.ResetPlayer();
-            foreach (var t in stateMachine.sharedContext.farmTiles)
+            stateMachine.context.player.ResetPlayer();
+            foreach (var t in stateMachine.context.farmTiles)
             {
                 t.ResetFarmTile();
             }
             
-            stateMachine.sharedContext.runTimeValues = new GameRunTimeValues();
-            stateMachine.sharedContext.conclusionUI.Reset();
-            stateMachine.sharedContext.conclusionUI.gameObject.SetActive(false);
+            stateMachine.context.runTimeValues = new GameRunTimeValues();
+            stateMachine.context.conclusionUI.Reset();
+            stateMachine.context.conclusionUI.gameObject.SetActive(false);
 
             //set text tween
-            stateMachine.sharedContext.readyTextImage.gameObject.SetActive(true);
-            stateMachine.sharedContext.goTextImage.gameObject.SetActive(true);
-            stateMachine.sharedContext.readyTextImage.transform.localScale = Vector3.zero;
-            stateMachine.sharedContext.readyTextImage.color = Color.white;
-            stateMachine.sharedContext.goTextImage.transform.localScale = Vector3.zero;
-            stateMachine.sharedContext.goTextImage.color = Color.white;
+            stateMachine.context.readyTextImage.gameObject.SetActive(true);
+            stateMachine.context.goTextImage.gameObject.SetActive(true);
+            stateMachine.context.readyTextImage.transform.localScale = Vector3.zero;
+            stateMachine.context.readyTextImage.color = Color.white;
+            stateMachine.context.goTextImage.transform.localScale = Vector3.zero;
+            stateMachine.context.goTextImage.color = Color.white;
             
             //reset metronome
-            stateMachine.sharedContext.carrotMetronome.Reset();
-            stateMachine.sharedContext.carrotMetronome.ShowMetronomePanel();
-            stateMachine.sharedContext.carrotMetronome.ConfigMetronome((float) K.BeatsPerMinute);
+            stateMachine.context.carrotMetronome.Reset();
+            stateMachine.context.carrotMetronome.ShowMetronomePanel();
+            stateMachine.context.carrotMetronome.ConfigMetronome((float) K.BeatsPerMinute);
             
             Koreographer.Instance.ClearEventRegister();
 
@@ -235,19 +235,19 @@ public class GameManager : MonoBehaviour
 
             void DoReady(KoreographyEvent kEvent)
             {
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.ready);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.ready);
                 var sequence = DOTween.Sequence();
-                var readyInTweener = stateMachine.sharedContext.readyTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
-                var readyOutTweener = stateMachine.sharedContext.readyTextImage.DOFade(0, 0.5f);
+                var readyInTweener = stateMachine.context.readyTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+                var readyOutTweener = stateMachine.context.readyTextImage.DOFade(0, 0.5f);
                 sequence.Append(readyInTweener).Append(readyOutTweener);
             }
 
             void DoStart(KoreographyEvent kEvent)
             {
-                SoundEffectManager.singleton.PlaySFX(SoundEffectManager.SoundEffectName.go);
+                SFXManager.singleton.PlaySFX(SFXManager.SoundEffectName.go);
                 var sequence = DOTween.Sequence();
-                var goInTweener = stateMachine.sharedContext.goTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
-                var goOutTweener = stateMachine.sharedContext.goTextImage.DOFade(0, 0.5f);
+                var goInTweener = stateMachine.context.goTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+                var goOutTweener = stateMachine.context.goTextImage.DOFade(0, 0.5f);
                 sequence.Append(goInTweener).Append(goOutTweener);
                 SwitchToState(GameLoopState.GameRunning); 
             }
@@ -256,11 +256,11 @@ public class GameManager : MonoBehaviour
         public override void ExitState()
         {
             base.ExitState();
-            stateMachine.sharedContext.readyTextImage.transform.localScale = Vector3.zero;
-            stateMachine.sharedContext.goTextImage.transform.localScale = Vector3.zero;
+            stateMachine.context.readyTextImage.transform.localScale = Vector3.zero;
+            stateMachine.context.goTextImage.transform.localScale = Vector3.zero;
         }
     }
-    public class GameRunningState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    public class GameRunningState : BasicStateInstance<GameLoopState, GameManagerContext>
     {
         public override void EnterState()
         {
@@ -283,7 +283,7 @@ public class GameManager : MonoBehaviour
             GameEvents.OnReachedFarmTile += OnReachedFarmTile;
             GameEvents.OnLeaveFarmTile += OnLeaveFarmTile;
             GameEvents.OnHarvestCarrot += OnHarvestCarrot;
-            stateMachine.sharedContext.player.SetPlayerMovable(true);
+            stateMachine.context.player.SetPlayerMovable(true);
         }
         
         public override void ExitState()
@@ -292,43 +292,43 @@ public class GameManager : MonoBehaviour
             GameEvents.OnReachedFarmTile -= OnReachedFarmTile;
             GameEvents.OnLeaveFarmTile -= OnLeaveFarmTile;
             GameEvents.OnHarvestCarrot -= OnHarvestCarrot;
-            stateMachine.sharedContext.player.SetPlayerMovable(false);
+            stateMachine.context.player.SetPlayerMovable(false);
         }
 
         private void OnReachedFarmTile(FarmTile arg1, PlayerFarmAction arg2)
         {
-            stateMachine.sharedContext.player.CurTile = arg1;
+            stateMachine.context.player.CurTile = arg1;
             Debug.Log($"OnReachedFarmTile, detected need action {arg2}");
         }
         private void OnLeaveFarmTile(FarmTile obj)
         {
-            if (stateMachine.sharedContext.player.CurTile == obj)
-                stateMachine.sharedContext.player.CurTile = null;
+            if (stateMachine.context.player.CurTile == obj)
+                stateMachine.context.player.CurTile = null;
             Debug.Log($"OnLeaveFarmTile");
         }
         
         public void OnHarvestCarrot(CarrotLevel level)
         {
-            stateMachine.sharedContext.runTimeValues.harvestedCarrots[(int) level] += 1;
+            stateMachine.context.runTimeValues.harvestedCarrots[(int) level] += 1;
         }
     }
-    public class GameEndState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    public class GameEndState : BasicStateInstance<GameLoopState, GameManagerContext>
     {
         public override void EnterState()
         {
             base.EnterState();
             //hide carrot
-            stateMachine.sharedContext.carrotMetronome.HideMetronomePanel();
+            stateMachine.context.carrotMetronome.HideMetronomePanel();
             //set text tween
-            stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
-            stateMachine.sharedContext.endTextImage.color = Color.white;
+            stateMachine.context.endTextImage.transform.localScale = Vector3.zero;
+            stateMachine.context.endTextImage.color = Color.white;
             //reset
-            stateMachine.sharedContext.indicator.Reset();
+            stateMachine.context.indicator.Reset();
 
             Koreographer.Instance.ClearEventRegister();
             
-            var endInTweener = stateMachine.sharedContext.endTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
-            var endOutTweener = stateMachine.sharedContext.endTextImage.DOFade(0, 0.5f);
+            var endInTweener = stateMachine.context.endTextImage.transform.DOScale(1, 0.5f).SetEase(Ease.InOutElastic);
+            var endOutTweener = stateMachine.context.endTextImage.DOFade(0, 0.5f);
             DOTween.Sequence()
                 //.Append(endInTweener)
                 //.Append(endOutTweener)
@@ -338,24 +338,24 @@ public class GameManager : MonoBehaviour
         
         public override void ExitState()
         {
-            stateMachine.sharedContext.endTextImage.transform.localScale = Vector3.zero;
+            stateMachine.context.endTextImage.transform.localScale = Vector3.zero;
             base.ExitState();
         }
     }
     
-    public class ConclusionState : SimpleStateInstance<GameLoopState, GameManagerContext>
+    public class ConclusionState : BasicStateInstance<GameLoopState, GameManagerContext>
     {
         public override void EnterState()
         {
             base.EnterState();
-            stateMachine.sharedContext.conclusionUI.gameObject.SetActive(true);
-            stateMachine.sharedContext.conclusionUI.OpenConclusionUI();
-            stateMachine.sharedContext.againButton.onClick.AddListener(OnAgainButtonClick);
-            stateMachine.sharedContext.homeButton.onClick.AddListener(OnHomeButtonClick);
+            stateMachine.context.conclusionUI.gameObject.SetActive(true);
+            stateMachine.context.conclusionUI.OpenConclusionUI();
+            stateMachine.context.againButton.onClick.AddListener(OnAgainButtonClick);
+            stateMachine.context.homeButton.onClick.AddListener(OnHomeButtonClick);
         }
         public override void ExitState()
         {
-            stateMachine.sharedContext.conclusionUI.Reset();
+            stateMachine.context.conclusionUI.Reset();
             base.ExitState();
         }
         void OnAgainButtonClick()

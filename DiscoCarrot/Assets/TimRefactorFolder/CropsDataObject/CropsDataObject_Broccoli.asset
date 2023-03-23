@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57962a719b4d74b4eb83f85182b5041d, type: 3}
+  m_Name: CropsDataObject_Broccoli
+  m_EditorClassIdentifier: 
+  growthNodes:
+  - stateName: Seed
+    presentationPrefab: {fileID: 7583810042114701534, guid: efc1f392ead71e043a34a4f4d28baf8e, type: 3}
+    duration: 5
+    needs: 
+  - stateName: Sprout
+    presentationPrefab: {fileID: 5413379788739533228, guid: 1dab6cfec23489c459cf11763f9c7a09, type: 3}
+    duration: 5
+    needs: 
+  - stateName: FullGrown
+    presentationPrefab: {fileID: 7702062508084014686, guid: 66a4f4bfa9fc23544a5f102a354e8f42, type: 3}
+    duration: 5
+    needs: 

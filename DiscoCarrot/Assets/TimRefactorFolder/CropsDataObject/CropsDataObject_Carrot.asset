@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57962a719b4d74b4eb83f85182b5041d, type: 3}
+  m_Name: CropsDataObject_Carrot
+  m_EditorClassIdentifier: 
+  growthNodes:
+  - stateName: Seed
+    presentationPrefab: {fileID: 2213879468335559747, guid: 0938cc912c6dd55448762a6c23d43991, type: 3}
+    duration: 5
+    needs: 
+  - stateName: Sprout
+    presentationPrefab: {fileID: 6778059769214632586, guid: 1bef8af4c40029847af631d6b79c42bd, type: 3}
+    duration: 5
+    needs: 
+  - stateName: FullGrown
+    presentationPrefab: {fileID: 9155144264106600388, guid: f25b4e5b8f489054e9b39eb4e2907744, type: 3}
+    duration: 5
+    needs: 
